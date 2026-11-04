@@ -1,0 +1,8 @@
+[
+  { "outlet": "CNN en Español", "owner": "Warner Bros. Discovery", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Country provisional: ver README." },
+  { "outlet": "LN+", "owner": "Grupo La Nación", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
+  { "outlet": "C5N", "owner": "Grupo Indalo", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
+  { "outlet": "A24", "owner": "Grupo América", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
+  { "outlet": "Telefe", "owner": "Grupo Scaglione", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Verificar el grupo propietario vigente." },
+  { "outlet": "BBC", "owner": "BBC", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Country provisional: ver README." }
+]

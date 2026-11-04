@@ -1,0 +1,19 @@
+{
+  "name": "verificador-noticias",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "migrate": "node scripts/migrate.mjs",
+    "smoke-db": "node scripts/smoke-db.mjs",
+    "seed-demo": "node scripts/seed-demo.mjs",
+    "add-fact": "node scripts/add-fact.mjs",
+    "worker": "node src/worker.mjs",
+    "web": "node src/server.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}
