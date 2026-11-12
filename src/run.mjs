@@ -1,5 +1,5 @@
 import { buildTop } from './engine/pipeline.mjs';
-import { ingestSources, isHeadline } from './ingest.mjs';
+import { cleanTitle, ingestSources, isHeadline } from './ingest.mjs';
 
 export const WINDOW_MS = 24 * 3600e3;
 export const PREVIOUS_MS = 3 * 3600e3;
@@ -10,7 +10,11 @@ export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date()
   const nowIso = now.toISOString();
   const ingest = await ingestSources({ sources, fetchFn, repo, now });
 
-  const articles = (await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString())).filter((a) => isHeadline(a.title));
+  // Se limpian los títulos también al leerlos: las notas viejas guardadas con sufijo no se corrigen solas.
+  const byOutlet = Object.fromEntries(sources.map((s) => [s.outlet, s]));
+  const articles = (await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString()))
+    .map((a) => ({ ...a, title: cleanTitle(byOutlet[a.outlet] ?? {}, a.title) }))
+    .filter((a) => isHeadline(a.title));
   const facts = await repo.listFacts();
   const previous = await repo.levelsAt(new Date(now - PREVIOUS_MS).toISOString());
 

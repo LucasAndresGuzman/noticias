@@ -195,3 +195,11 @@ test('cleanTitle: el patrón quita variantes regionales de Telefe sin vaciar el 
   assert.equal(cleanTitle(s, 'Milei despidió al Papa - Telefe'), 'Milei despidió al Papa');
   assert.equal(cleanTitle(s, 'Telefe estrena un ciclo nuevo'), 'Telefe estrena un ciclo nuevo');
 });
+
+test('runOnce limpia el sufijo del título de notas ya guardadas', async () => {
+  const repo = createMemoryRepo();
+  await repo.upsertArticles([{ id: 'z1', outlet: 'Telefe', owner: 'G', title: 'Milei despidió al Papa en Ezeiza - Telefe Córdoba', publishedAt: '2026-11-04T11:00:00Z', country: 'AR', url: 'https://t.invalid/z1' }]);
+  await repo.upsertFact({ id: 'f', articleIds: ['z1'], evidence: [{ id: 'e1', type: 'single_source' }] });
+  await runOnce({ repo, sources: [{ outlet: 'Telefe', owner: 'G', country: 'AR', stripTitlePattern: '\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$' }], now: NOWD });
+  assert.equal((await repo.latestSnapshot()).payload.top.AR[0].title, 'Milei despidió al Papa en Ezeiza');
+});
