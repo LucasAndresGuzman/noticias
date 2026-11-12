@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createMemoryRepo } from '../src/repo-memory.mjs';
 import { readFileSync } from 'node:fs';
-import { idFromUrl, ingestSources, loadSources, matchesSource } from '../src/ingest.mjs';
+import { cleanTitle, idFromUrl, ingestSources, loadSources, matchesSource } from '../src/ingest.mjs';
 import { runOnce } from '../src/run.mjs';
 import { validateFact } from '../src/validate.mjs';
 import { articles, facts, previous, NOW } from './fixtures.mjs';
@@ -109,4 +109,11 @@ test('validateFact rechaza tipos desconocidos, ids repetidos y contradicciones f
   assert.throws(() => validateFact({ ...base, evidence: [...base.evidence, { id: 'e1', type: 'single_source' }] }), /repetido/);
   assert.throws(() => validateFact({ ...base, contradictions: [{ a: 'e1', b: 'zz' }] }), /no existe/);
   assert.throws(() => validateFact({ ...base, articleIds: [] }), /nota/);
+});
+
+test('cleanTitle quita solo el sufijo configurado y al final', () => {
+  const s = { stripTitleSuffix: ' - CNN en Español' };
+  assert.equal(cleanTitle(s, 'Suben las tasas en Argentina - CNN en Español'), 'Suben las tasas en Argentina');
+  assert.equal(cleanTitle(s, 'CNN en Español - nota distinta'), 'CNN en Español - nota distinta');
+  assert.equal(cleanTitle({}, 'Sin sufijo'), 'Sin sufijo');
 });

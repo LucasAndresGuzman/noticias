@@ -17,6 +17,12 @@ export function matchesSource(source, item) {
   return words.some((w) => hay.includes(fold(w)));
 }
 
+/** Quita el sufijo que algunos agregadores suman al título (p. ej. " - CNN en Español"). */
+export function cleanTitle(source, title) {
+  const suf = source.stripTitleSuffix;
+  return suf && title.endsWith(suf) ? title.slice(0, -suf.length).trim() : title;
+}
+
 /** Lee config/sources.json y deja solo las fuentes con URL de feed cargada. */
 export function loadSources(path = new URL('../config/sources.json', import.meta.url)) {
   const all = JSON.parse(readFileSync(path, 'utf8'));
@@ -45,7 +51,7 @@ export async function ingestSources({ sources, fetchFn = fetch, repo, now = new 
         id: idFromUrl(i.link),
         outlet: s.outlet,
         owner: s.owner,
-        title: i.title,
+        title: cleanTitle(s, i.title),
         publishedAt: i.published,
         country: s.country,
         url: i.link
