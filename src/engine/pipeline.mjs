@@ -6,6 +6,25 @@ const OFFICIAL_TYPES = new Set(['official_statement', 'judicial_resolution']);
 const INDEPENDENT_TYPES = new Set(['independent_outlets', 'verified_video', 'judicial_resolution']);
 
 /**
+ * Si las notas de un mismo hecho quedaron en grupos distintos (titulares con palabras muy diferentes),
+ * se unen en uno solo por país: un hecho, una fila. Así la cobertura suma todos sus medios.
+ */
+export function mergeByFact(clusters, facts) {
+  let out = clusters;
+  for (const f of facts) {
+    const ids = new Set(f.articleIds);
+    const hit = out.filter((c) => c.members.some((m) => ids.has(m.id)));
+    for (const country of new Set(hit.map((c) => c.country))) {
+      const same = hit.filter((c) => c.country === country);
+      if (same.length < 2) continue;
+      const merged = { country, members: same.flatMap((c) => c.members) };
+      out = [...out.filter((c) => !same.includes(c)), merged];
+    }
+  }
+  return out;
+}
+
+/**
  * articles: notas ingeridas.
  * facts: registros de evidencia por hecho:
  *   { id, articleIds, category, evidence: [...], contradictions: [...], flags: {...}, alerts: [...], note }
@@ -13,7 +32,7 @@ const INDEPENDENT_TYPES = new Set(['independent_outlets', 'verified_video', 'jud
  * now: ISO. Devuelve { top: { [país]: [...] }, pendingReview: [...], noEvidence: [...] }
  */
 export function buildTop(articles, facts, previous, now) {
-  const clusters = cluster(articles);
+  const clusters = mergeByFact(cluster(articles), facts);
   const ranked = rank(clusters, now, { top: 1000 }); // se recorta después de filtrar
   const t = Date.parse(now);
 
