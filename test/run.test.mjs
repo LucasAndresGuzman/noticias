@@ -203,3 +203,21 @@ test('runOnce limpia el sufijo del título de notas ya guardadas', async () => {
   await runOnce({ repo, sources: [{ outlet: 'Telefe', owner: 'G', country: 'AR', stripTitlePattern: '\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$' }], now: NOWD });
   assert.equal((await repo.latestSnapshot()).payload.top.AR[0].title, 'Milei despidió al Papa en Ezeiza');
 });
+
+test('hecho sensible: queda pendiente de revisión humana y recién se publica al aprobarse', async () => {
+  const mk = (id, outlet) => ({ id, outlet, owner: `G${outlet}`, title: 'Irán declaró terroristas a la Armada y la Fuerza Aérea de Argentina', publishedAt: '2026-11-11T10:00:00Z', country: 'AR', url: `https://x.invalid/${id}` });
+  const f = loadFacts().find((x) => x.id === 'iran-terroristas-armada-fuerza-aerea');
+  assert.equal(f.flags.sensitive, true);
+  const run = async (fact) => {
+    const repo = createMemoryRepo();
+    await repo.upsertArticles([mk(f.articleIds[0], 'C5N'), mk(f.articleIds[1], 'A24'), mk(f.articleIds[2], 'Telefe')]);
+    await repo.upsertFact(fact);
+    const r = await runOnce({ repo, sources: [], now: new Date('2026-11-11T12:00:00Z') });
+    return r;
+  };
+  const sinRevisar = await run(f);
+  assert.equal(sinRevisar.published, 0);
+  assert.equal(sinRevisar.pendingReview, 1);
+  const revisado = await run({ ...f, flags: { ...f.flags, humanReviewed: true } });
+  assert.equal(revisado.published, 1);
+});

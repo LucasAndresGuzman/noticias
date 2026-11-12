@@ -112,6 +112,11 @@
 
   <main id="list"><p class="state">Cargando el Top 10…</p></main>
   <p class="pending" id="pending" hidden></p>
+  <details class="cand" id="rev" hidden open>
+    <summary>Esperando revisión humana</summary>
+    <p class="pending" style="margin:6px 0">Temas sensibles: tienen evidencia cargada pero no se publican hasta que una persona los revise.</p>
+    <ol id="revlist"></ol>
+  </details>
   <details class="cand" id="cand" hidden>
     <summary>Temas con más cobertura que esperan evidencia</summary>
     <ol id="candlist"></ol>
@@ -280,6 +285,12 @@
       p.textContent = 'Además hay ' + plural(data.withoutEvidence, 'tema con cobertura', 'temas con cobertura') +
         ' sin evidencia cargada todavía. No se publican con un nivel inventado.';
     } else { p.hidden = true; }
+    var rev = document.getElementById('rev'), rl = document.getElementById('revlist');
+    rl.replaceChildren();
+    (data.pendingReview || []).forEach(function (r) {
+      rl.appendChild(el('li', null, [r.title, el('div', { class: 'm', text: 'Nivel de respaldo calculado: ' + r.level + ' de ' + CAP + ' (' + r.label + ')' })]));
+    });
+    rev.hidden = !(data.pendingReview || []).length;
     var cand = document.getElementById('cand'), cl = document.getElementById('candlist');
     cl.replaceChildren();
     (data.candidates || []).forEach(function (c) {

@@ -2,7 +2,12 @@
   {
     "id": "papa-leon-xiv-mision-lujan",
     "category": "Sociedad",
-    "articleIds": ["7cc41905f50dee1f", "770c0b7489bc2d3d", "6b06792e7180d2f4", "508371bb187f2574"],
+    "articleIds": [
+      "7cc41905f50dee1f",
+      "770c0b7489bc2d3d",
+      "6b06792e7180d2f4",
+      "508371bb187f2574"
+    ],
     "evidence": [
       {
         "id": "e1",
@@ -31,7 +36,12 @@
   {
     "id": "papa-leon-xiv-despedida-dos-papas",
     "category": "Sociedad",
-    "articleIds": ["bab641d2caf5e15a", "76f5ec4686d874f0", "6b13267803d52403", "89ba552c1a74a1eb"],
+    "articleIds": [
+      "bab641d2caf5e15a",
+      "76f5ec4686d874f0",
+      "6b13267803d52403",
+      "89ba552c1a74a1eb"
+    ],
     "evidence": [
       {
         "id": "e1",
@@ -42,5 +52,68 @@
       }
     ],
     "note": "Falta una fuente primaria: no se encontró el texto oficial del discurso de despedida en las fuentes revisadas (la nota de Vatican News consultada no incluye la frase)."
+  },
+  {
+    "id": "milei-despide-papa-ezeiza",
+    "category": "Política",
+    "articleIds": [
+      "936b53fc0ea28faa",
+      "2471e7d3be105c35",
+      "a61b993399d4b7ee",
+      "baddb2dc96d202e4"
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "type": "official_statement",
+        "origin": "santa-sede",
+        "label": "Boletín de la Sala de Prensa de la Santa Sede, 11/11/2026: el presidente Milei despidió al Papa en el aeropuerto Ministro Pistarini antes de partir hacia Lima",
+        "url": "https://press.vatican.va/content/salastampa/es/bollettino/pubblico/2026/11/11/111126d.html"
+      },
+      {
+        "id": "e2",
+        "type": "official_statement",
+        "origin": "santa-sede",
+        "label": "Vatican News: el Papa envió un telegrama de agradecimiento al presidente Milei durante el vuelo",
+        "url": "https://www.vaticannews.va/es/papa/news/2026-11/leon-xiv-despide-de-argentina-rumbo-a-peru-final-viaje-apostolic.html"
+      },
+      {
+        "id": "e3",
+        "type": "independent_outlets",
+        "origin": "prensa-argentina",
+        "label": "Cobertura de C5N, Telefe, CNN en Español, La Nación y Rosario3. No se verificó que cada medio tenga fuente propia.",
+        "url": "https://www.rosario3.com/informaciongeneral/javier-milei-se-emociono-hasta-las-lagrimas-al-despedir-al-papa-leon-xiv-en-ezeiza-esta-es-su-casa-20261111-0068.html"
+      }
+    ],
+    "note": "Está confirmado por la Santa Sede que Milei despidió al Papa en Ezeiza. El video que cita el titular no fue verificado: no se confirmó su fecha ni su origen."
+  },
+  {
+    "id": "iran-terroristas-armada-fuerza-aerea",
+    "category": "Internacional",
+    "articleIds": [
+      "e710168f34043c0b",
+      "a4a571d03e8816bc",
+      "93821f59ee5fdfbf"
+    ],
+    "flags": {
+      "sensitive": true
+    },
+    "evidence": [
+      {
+        "id": "e1",
+        "type": "official_statement",
+        "origin": "cancilleria-argentina",
+        "label": "Cancillería argentina rechaza la decisión de Irán (comunicado y publicación en X, 11/11/2026). No se pudo leer el texto completo.",
+        "url": "https://x.com/Cancilleria_Ar/status/2120572988940800246"
+      },
+      {
+        "id": "e2",
+        "type": "independent_outlets",
+        "origin": "prensa",
+        "label": "Reuters (vía Investing.com) atribuye la decisión al Ministerio de Exteriores de Irán, por reciprocidad; Ámbito, C5N, A24 y Telefe la reportan",
+        "url": "https://www.investing.com/news/world-news/iran-designates-argentinas-navy-and-air-force-as-terrorist-organizations-5017781"
+      }
+    ],
+    "note": "Tema sensible: acusación de terrorismo entre Estados, pendiente de revisión humana. No se pudo consultar el texto original de Irán ni el comunicado argentino completo; el hecho se conoce por Reuters y por la prensa argentina."
   }
 ]
