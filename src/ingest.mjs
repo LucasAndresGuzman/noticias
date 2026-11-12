@@ -26,6 +26,10 @@ export function cleanTitle(source, title) {
   return title;
 }
 
+/** Un titular real tiene al menos 4 palabras. Descarta páginas de etiquetas o secciones ("Papa", "Netflix"). */
+export const MIN_HEADLINE_WORDS = 4;
+export const isHeadline = (title) => String(title).trim().split(/\s+/).filter(Boolean).length >= MIN_HEADLINE_WORDS;
+
 /** Lee config/sources.json y deja solo las fuentes con URL de feed cargada. */
 export function loadSources(path = new URL('../config/sources.json', import.meta.url)) {
   const all = JSON.parse(readFileSync(path, 'utf8'));
@@ -50,11 +54,14 @@ export async function ingestSources({ sources, fetchFn = fetch, repo, now = new 
       const items = parseFeed(await res.text()).filter(
         (i) => Date.parse(i.published) <= now.getTime() + 10 * 60e3 && matchesSource(s, i) // descarta fechas futuras y notas ajenas al país
       );
-      const arts = items.map((i) => ({
+      const arts = items
+        .map((i) => ({ ...i, title: cleanTitle(s, i.title) }))
+        .filter((i) => isHeadline(i.title))
+        .map((i) => ({
         id: idFromUrl(i.link),
         outlet: s.outlet,
         owner: s.owner,
-        title: cleanTitle(s, i.title),
+        title: i.title,
         publishedAt: i.published,
         country: s.country,
         url: i.link

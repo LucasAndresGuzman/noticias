@@ -1,5 +1,5 @@
 import { buildTop } from './engine/pipeline.mjs';
-import { ingestSources } from './ingest.mjs';
+import { ingestSources, isHeadline } from './ingest.mjs';
 
 export const WINDOW_MS = 24 * 3600e3;
 export const PREVIOUS_MS = 3 * 3600e3;
@@ -10,7 +10,7 @@ export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date()
   const nowIso = now.toISOString();
   const ingest = await ingestSources({ sources, fetchFn, repo, now });
 
-  const articles = await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString());
+  const articles = (await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString())).filter((a) => isHeadline(a.title));
   const facts = await repo.listFacts();
   const previous = await repo.levelsAt(new Date(now - PREVIOUS_MS).toISOString());
 

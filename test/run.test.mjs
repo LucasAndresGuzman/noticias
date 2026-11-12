@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createMemoryRepo } from '../src/repo-memory.mjs';
 import { readFileSync } from 'node:fs';
-import { cleanTitle, idFromUrl, ingestSources, loadSources, matchesSource } from '../src/ingest.mjs';
+import { cleanTitle, idFromUrl, ingestSources, isHeadline, loadSources, matchesSource } from '../src/ingest.mjs';
 import { runOnce } from '../src/run.mjs';
 import { validateFact } from '../src/validate.mjs';
 import { articles, facts, previous, NOW } from './fixtures.mjs';
@@ -57,9 +57,9 @@ test('ingesta: un medio regional solo aporta notas que mencionan el país', asyn
   const repo = createMemoryRepo();
   const sources = [{ outlet: 'R', owner: 'GR', country: 'AR', feedUrl: 'https://r.invalid/rss', mustMatch: ['Argentina'] }];
   const xml = `<rss><channel>
-    <item><title>Inflación en Argentina</title><link>https://r.invalid/1</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate></item>
-    <item><title>Clima en Lima</title><link>https://r.invalid/2</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>Perú</description></item>
-    <item><title>Fútbol</title><link>https://r.invalid/3</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>El seleccionado de Argentina ganó</description></item>
+    <item><title>La inflación en Argentina sigue alta</title><link>https://r.invalid/1</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate></item>
+    <item><title>El clima en Lima esta semana</title><link>https://r.invalid/2</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>Perú</description></item>
+    <item><title>Fútbol: ganó el seleccionado nacional</title><link>https://r.invalid/3</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>El seleccionado de Argentina ganó</description></item>
   </channel></rss>`;
   const r = await ingestSources({ sources, fetchFn: okFetch({ 'https://r.invalid/rss': xml }), repo, now: NOWD });
   assert.equal(r.fresh, 2);
@@ -136,4 +136,31 @@ test('repo: una nota repetida con título corregido se actualiza sin contarse co
 
 test('cleanTitle no distingue mayúsculas en el sufijo', () => {
   assert.equal(cleanTitle({ stripTitleSuffix: [' - A24.com'] }, 'Inflación de octubre - a24.com'), 'Inflación de octubre');
+});
+
+test('isHeadline: descarta títulos de menos de 4 palabras', () => {
+  assert.equal(isHeadline('Papa'), false);
+  assert.equal(isHeadline('Germán Martitegui'), false);
+  assert.equal(isHeadline('  Netflix  '), false);
+  assert.equal(isHeadline('El Indec dará a conocer la inflación'), true);
+});
+
+test('ingesta: las páginas de etiquetas (títulos cortos) no se guardan', async () => {
+  const repo = createMemoryRepo();
+  const sources = [{ outlet: 'A', owner: 'G', country: 'AR', feedUrl: 'https://a.invalid/rss', stripTitleSuffix: [' - a24.com'] }];
+  const xml = feed([
+    ['Papa - a24.com', 'https://a.invalid/t1', 'Wed, 04 Nov 2026 11:00:00 GMT'],
+    ['El Indec informó la inflación de octubre - a24.com', 'https://a.invalid/n1', 'Wed, 04 Nov 2026 11:00:00 GMT']
+  ]);
+  const r = await ingestSources({ sources, fetchFn: okFetch({ 'https://a.invalid/rss': xml }), repo, now: NOWD });
+  assert.equal(r.fresh, 1);
+  const [a] = await repo.listArticlesSince('2026-11-04T00:00:00Z');
+  assert.equal(a.title, 'El Indec informó la inflación de octubre');
+});
+
+test('runOnce ignora notas ya guardadas con título corto', async () => {
+  const repo = createMemoryRepo();
+  await repo.upsertArticles([{ id: 'c1', outlet: 'A24', owner: 'G', title: 'Netflix', publishedAt: '2026-11-04T11:00:00Z', country: 'AR', url: 'https://a.invalid/c1' }]);
+  const r = await runOnce({ repo, sources: [], now: NOWD });
+  assert.equal(r.articles, 0);
 });
