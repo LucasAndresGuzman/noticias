@@ -117,3 +117,19 @@ test('cleanTitle quita solo el sufijo configurado y al final', () => {
   assert.equal(cleanTitle(s, 'CNN en Español - nota distinta'), 'CNN en Español - nota distinta');
   assert.equal(cleanTitle({}, 'Sin sufijo'), 'Sin sufijo');
 });
+
+test('cleanTitle acepta varios sufijos y no deja títulos vacíos', () => {
+  const s = { stripTitleSuffix: [' - A24.com', ' - A24'] };
+  assert.equal(cleanTitle(s, 'Nota uno - A24.com'), 'Nota uno');
+  assert.equal(cleanTitle(s, 'Nota dos - A24'), 'Nota dos');
+  assert.equal(cleanTitle({ stripTitleSuffix: [' - T'] }, ' - T'), ' - T');
+});
+
+test('repo: una nota repetida con título corregido se actualiza sin contarse como nueva', async () => {
+  const repo = createMemoryRepo();
+  const base = { id: 'x1', outlet: 'A', owner: 'G', country: 'AR', url: 'https://a.invalid/x1', publishedAt: '2026-11-04T11:00:00Z' };
+  assert.equal(await repo.upsertArticles([{ ...base, title: 'Título - A24' }]), 1);
+  assert.equal(await repo.upsertArticles([{ ...base, title: 'Título' }]), 0);
+  const [a] = await repo.listArticlesSince('2026-11-04T00:00:00Z');
+  assert.equal(a.title, 'Título');
+});

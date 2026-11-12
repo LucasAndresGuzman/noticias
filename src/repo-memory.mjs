@@ -15,6 +15,8 @@ export function createMemoryRepo() {
         if (!articles.has(a.id)) {
           articles.set(a.id, { ...a, publishedAt: iso(a.publishedAt) });
           added++;
+        } else if (articles.get(a.id).title !== a.title) {
+          articles.get(a.id).title = a.title; // título corregido: se actualiza, no cuenta como nota nueva
         }
       }
       return added;

@@ -10,13 +10,16 @@ export function createPgRepo(pool) {
     async upsertArticles(list) {
       let added = 0;
       for (const a of list) {
+        // Nota nueva: se inserta. Nota ya guardada con otro título (p. ej. corregido): se actualiza el título.
         const r = await pool.query(
           `insert into articles (id, outlet, owner, title, published_at, country, url)
            values ($1, $2, $3, $4, $5, $6, $7)
-           on conflict (id) do nothing`,
+           on conflict (id) do update set title = excluded.title
+             where articles.title is distinct from excluded.title
+           returning (xmax = 0) as inserted`,
           [a.id, a.outlet, a.owner, a.title, iso(a.publishedAt), a.country, a.url]
         );
-        added += r.rowCount;
+        if (r.rows[0]?.inserted) added++;
       }
       return added;
     },

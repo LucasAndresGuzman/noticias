@@ -17,10 +17,13 @@ export function matchesSource(source, item) {
   return words.some((w) => hay.includes(fold(w)));
 }
 
-/** Quita el sufijo que algunos agregadores suman al título (p. ej. " - CNN en Español"). */
+/** Quita el sufijo que algunos agregadores suman al título (p. ej. " - CNN en Español"). Acepta uno o varios. */
 export function cleanTitle(source, title) {
-  const suf = source.stripTitleSuffix;
-  return suf && title.endsWith(suf) ? title.slice(0, -suf.length).trim() : title;
+  const list = [].concat(source.stripTitleSuffix ?? []);
+  for (const suf of list) {
+    if (suf && title.endsWith(suf) && title.length > suf.length) return title.slice(0, -suf.length).trim();
+  }
+  return title;
 }
 
 /** Lee config/sources.json y deja solo las fuentes con URL de feed cargada. */
