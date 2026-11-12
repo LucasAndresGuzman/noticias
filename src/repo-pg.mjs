@@ -1,6 +1,8 @@
 // Repositorio sobre PostgreSQL. Misma interfaz que repo-memory.mjs.
 // IMPORTANTE: este archivo NO se pudo probar en el entorno de desarrollo (sin acceso a npm ni a una base).
 // Antes de confiar en él, ejecutar `npm run smoke-db` contra la base real.
+import { readFileSync } from 'node:fs';
+
 const iso = (d) => new Date(d).toISOString();
 
 export function createPgRepo(pool) {
@@ -100,6 +102,23 @@ export function createPgRepo(pool) {
       await pool.end();
     }
   };
+}
+
+// Crea las tablas si faltan. Un candado de la base evita que la API y el worker lo hagan a la vez.
+// Sin probar contra una base real en el entorno de desarrollo.
+export async function ensureSchema(pool) {
+  const sql = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
+  const client = await pool.connect();
+  try {
+    await client.query('select pg_advisory_lock(727274)');
+    await client.query(sql);
+  } finally {
+    try {
+      await client.query('select pg_advisory_unlock(727274)');
+    } finally {
+      client.release();
+    }
+  }
 }
 
 // Crea el pool a partir de DATABASE_URL. `pg` se importa acá para no exigirlo en las pruebas.

@@ -1,6 +1,6 @@
 // Proceso que corre todo el día: lee noticias, calcula y guarda el resultado. Se despliega en Render.
 import { pathToFileURL } from 'node:url';
-import { createPgRepo, createPoolFromEnv } from './repo-pg.mjs';
+import { createPgRepo, createPoolFromEnv, ensureSchema } from './repo-pg.mjs';
 import { loadSources } from './ingest.mjs';
 import { runOnce } from './run.mjs';
 
@@ -25,7 +25,9 @@ export function startLoop({ run, intervalMs, log = console }) {
 async function main() {
   const minutes = Number(process.env.WORKER_INTERVAL_MIN ?? 5);
   if (!(minutes >= 1)) throw new Error('WORKER_INTERVAL_MIN debe ser un número mayor o igual a 1');
-  const repo = createPgRepo(await createPoolFromEnv());
+  const pool = await createPoolFromEnv();
+  await ensureSchema(pool);
+  const repo = createPgRepo(pool);
   const sources = loadSources();
   if (sources.length === 0) console.warn('Ninguna fuente tiene feedUrl en config/sources.json: no se leerán noticias.');
   console.log(`Worker iniciado: ${sources.length} fuentes, cada ${minutes} min.`);

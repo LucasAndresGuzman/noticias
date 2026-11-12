@@ -2,7 +2,7 @@
 import { createServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
 import { handleRequest } from './api.mjs';
-import { createPgRepo, createPoolFromEnv } from './repo-pg.mjs';
+import { createPgRepo, createPoolFromEnv, ensureSchema } from './repo-pg.mjs';
 
 export function makeServer(repo, env = process.env) {
   return createServer(async (req, res) => {
@@ -19,7 +19,9 @@ export function makeServer(repo, env = process.env) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const repo = createPgRepo(await createPoolFromEnv());
+  const pool = await createPoolFromEnv();
+  await ensureSchema(pool);
+  const repo = createPgRepo(pool);
   const port = Number(process.env.PORT ?? 3000);
   makeServer(repo).listen(port, () => console.log(`API privada escuchando en el puerto ${port}`));
 }
