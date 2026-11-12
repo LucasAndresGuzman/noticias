@@ -21,7 +21,7 @@ export function matchesSource(source, item) {
 export function cleanTitle(source, title) {
   const list = [].concat(source.stripTitleSuffix ?? []);
   for (const suf of list) {
-    if (suf && title.endsWith(suf) && title.length > suf.length) return title.slice(0, -suf.length).trim();
+    if (suf && title.length > suf.length && title.toLowerCase().endsWith(suf.toLowerCase())) return title.slice(0, -suf.length).trim();
   }
   return title;
 }

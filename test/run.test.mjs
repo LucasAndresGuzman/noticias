@@ -133,3 +133,7 @@ test('repo: una nota repetida con título corregido se actualiza sin contarse co
   const [a] = await repo.listArticlesSince('2026-11-04T00:00:00Z');
   assert.equal(a.title, 'Título');
 });
+
+test('cleanTitle no distingue mayúsculas en el sufijo', () => {
+  assert.equal(cleanTitle({ stripTitleSuffix: [' - A24.com'] }, 'Inflación de octubre - a24.com'), 'Inflación de octubre');
+});
