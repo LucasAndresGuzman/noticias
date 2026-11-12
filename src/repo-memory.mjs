@@ -61,8 +61,10 @@ export function createMemoryRepo() {
     async latestSnapshot() {
       return snapshots.length ? snapshots[snapshots.length - 1] : null;
     },
-    async prune(beforeIso) {
+    async prune(beforeIso, snapshotsBeforeIso = beforeIso) {
       const t = Date.parse(beforeIso);
+      const ts = Date.parse(snapshotsBeforeIso);
+      for (let i = snapshots.length - 1; i >= 0; i--) if (Date.parse(snapshots[i].generatedAt) < ts && snapshots.length > 1) snapshots.splice(i, 1);
       for (const [id, a] of articles) if (Date.parse(a.publishedAt) < t) articles.delete(id);
     },
     async close() {}

@@ -75,6 +75,15 @@ export function buildTop(articles, facts, previous, now) {
         )
       );
 
+      const byId = new Map(articles.map((a) => [a.id, a]));
+      const perOutlet = {};
+      const shown = row.members
+        .map((id) => byId.get(id))
+        .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
+        .filter((a) => (perOutlet[a.outlet] = (perOutlet[a.outlet] ?? 0) + 1) <= 4) // hasta 4 notas por medio
+        .map((a) => ({ outlet: a.outlet, title: a.title, url: a.url, publishedAt: a.publishedAt }));
+      const counted = new Set(result.lines.filter((l) => l.id && l.value > 0).map((l) => l.id));
+
       out.push({
         factId: fact.id,
         title: row.title,
@@ -90,7 +99,11 @@ export function buildTop(articles, facts, previous, now) {
         videoAlert: alerts.length > 0,
         alertText: alerts[0] ?? '',
         note: fact.note ?? '',
-        breakdown: result.lines
+        breakdown: result.lines,
+        evidence: items.map((e) => ({
+          id: e.id, type: e.type, origin: e.origin ?? null, label: e.label ?? '', url: e.url ?? '', counted: counted.has(e.id)
+        })),
+        articles: shown
       });
     }
     top[country] = out.slice(0, 10).map((r, i) => ({ position: i + 1, ...r }));

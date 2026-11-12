@@ -1,5 +1,6 @@
 // Lógica de la API, independiente del servidor (sirve en Render o como función en Vercel).
 import { createHash, timingSafeEqual } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 
 const sha = (s) => createHash('sha256').update(s).digest();
 
@@ -23,6 +24,32 @@ const HEADERS = {
   'cache-control': 'no-store',
   'x-robots-tag': 'noindex, nofollow'
 };
+const HTML_HEADERS = {
+  'content-type': 'text/html; charset=utf-8',
+  'cache-control': 'no-store',
+  'x-robots-tag': 'noindex, nofollow',
+  'referrer-policy': 'no-referrer',
+  'x-content-type-options': 'nosniff',
+  'content-security-policy':
+    "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+};
+
+/** Medios y cómo se leen, para mostrar en pantalla. No expone las direcciones de los feeds. */
+export function describeSources(path = new URL('../config/sources.json', import.meta.url)) {
+  try {
+    return JSON.parse(readFileSync(path, 'utf8')).map((s) => ({
+      outlet: s.outlet,
+      owner: s.owner,
+      country: s.country,
+      method: !s.feedUrl ? 'none' : /news\.google\.com/.test(s.feedUrl) ? 'google-news' : 'rss',
+      note: s.notaPublica ?? ''
+    }));
+  } catch {
+    return [];
+  }
+}
+
+const readPage = () => readFileSync(new URL('./web/index.html', import.meta.url), 'utf8');
 const json = (status, body, extra = {}) => ({ status, headers: { ...HEADERS, ...extra }, body: JSON.stringify(body) });
 
 /** req: { method, url, headers }. Devuelve { status, headers, body }. */
@@ -38,6 +65,8 @@ export async function handleRequest(req, { repo, env = process.env }) {
     return json(auth.status, { error: auth.error }, auth.status === 401 ? { 'www-authenticate': 'Basic realm="Privado"' } : {});
   }
 
+  if (path === '/' || path === '/index.html') return { status: 200, headers: HTML_HEADERS, body: readPage() };
+
   const snap = await repo.latestSnapshot();
 
   if (path === '/api/top') {
@@ -46,9 +75,12 @@ export async function handleRequest(req, { repo, env = process.env }) {
     return json(200, {
       country,
       generatedAt: snap?.generatedAt ?? null,
-      items: snap?.payload.top?.[country] ?? []
+      items: snap?.payload.top?.[country] ?? [],
+      withoutEvidence: (snap?.payload.noEvidence ?? []).filter((x) => x.country === country).length
     });
   }
+
+  if (path === '/api/sources') return json(200, { sources: describeSources() });
 
   if (path === '/api/pending') {
     return json(200, {

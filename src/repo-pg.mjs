@@ -95,8 +95,8 @@ export function createPgRepo(pool) {
     },
 
     // Limpia lo viejo para no llenar el plan gratuito de la base.
-    async prune(beforeIso) {
-      await pool.query(`delete from snapshots where generated_at < $1`, [beforeIso]);
+    async prune(beforeIso, snapshotsBeforeIso = beforeIso) {
+      await pool.query(`delete from snapshots where generated_at < $1`, [snapshotsBeforeIso]);
       await pool.query(`delete from level_history where at < $1`, [beforeIso]);
       await pool.query(`delete from articles where published_at < $1`, [beforeIso]);
     },

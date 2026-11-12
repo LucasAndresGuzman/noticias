@@ -12,14 +12,16 @@
       "Buenos Aires"
     ],
     "nota": "CNN en Español no tiene RSS propio en funcionamiento (cnnespanol.cnn.com/feed/ da 404). Se leen sus titulares a través de un feed de Google News filtrado por el sitio y por la palabra Argentina. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla.",
-    "stripTitleSuffix": " - CNN en Español"
+    "stripTitleSuffix": " - CNN en Español",
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por el sitio y por la palabra Argentina. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real."
   },
   {
     "outlet": "LN+",
     "owner": "Grupo La Nación",
     "country": "AR",
     "feedUrl": "https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml",
-    "nota": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal: debe mostrarse así en pantalla."
+    "nota": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal: debe mostrarse así en pantalla.",
+    "notaPublica": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal."
   },
   {
     "outlet": "C5N",
@@ -29,7 +31,8 @@
     "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por c5n.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla.",
     "stripTitleSuffix": [
       " - C5N"
-    ]
+    ],
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por c5n.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real. Datos de propiedad pendientes de actualizar."
   },
   {
     "outlet": "A24",
@@ -40,7 +43,8 @@
     "stripTitleSuffix": [
       " - A24.com",
       " - A24"
-    ]
+    ],
+    "notaPublica": "Se leen sus titulares a través de Google News, limitados a las secciones Política, Economía, Mundo y Tecnología de a24.com, sin farándula ni espectáculos. Es un intermediario. Datos de propiedad pendientes de actualizar."
   },
   {
     "outlet": "Telefe",
@@ -51,7 +55,8 @@
     "stripTitleSuffix": [
       " - Telefe"
     ],
-    "stripTitlePattern": "\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$"
+    "stripTitlePattern": "\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$",
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario. El grupo propietario vigente está por verificar."
   },
   {
     "outlet": "BBC",
@@ -65,6 +70,7 @@
       "Milei",
       "Buenos Aires"
     ],
-    "nota": "BBC Mundo cubre toda Latinoamérica: solo se toman notas que mencionan Argentina."
+    "nota": "BBC Mundo cubre toda Latinoamérica: solo se toman notas que mencionan Argentina.",
+    "notaPublica": "Se lee BBC Mundo por RSS. Cubre toda Latinoamérica, así que solo se toman notas que mencionan Argentina."
   }
 ]
