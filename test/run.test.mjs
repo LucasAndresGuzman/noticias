@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createMemoryRepo } from '../src/repo-memory.mjs';
-import { idFromUrl, ingestSources, loadSources } from '../src/ingest.mjs';
+import { readFileSync } from 'node:fs';
+import { idFromUrl, ingestSources, loadSources, matchesSource } from '../src/ingest.mjs';
 import { runOnce } from '../src/run.mjs';
 import { validateFact } from '../src/validate.mjs';
 import { articles, facts, previous, NOW } from './fixtures.mjs';
@@ -33,8 +34,35 @@ test('ingesta: un feed caído no frena a los demás y no duplica al repetir', as
   assert.equal(r2.fresh, 0);
 });
 
-test('config/sources.json: sin URLs cargadas no se lee ninguna fuente', () => {
-  assert.equal(loadSources().length, 0);
+test('config/sources.json: solo se leen fuentes con URL http(s) y todas tienen país y dueño', () => {
+  const all = JSON.parse(readFileSync(new URL('../config/sources.json', import.meta.url), 'utf8'));
+  assert.equal(all.length, 6);
+  const loaded = loadSources();
+  assert.ok(loaded.length >= 1 && loaded.length <= 6);
+  for (const s of loaded) {
+    assert.match(s.feedUrl, /^https:\/\//);
+    assert.ok(s.country && s.owner && s.outlet);
+  }
+});
+
+test('filtro por palabras: ignora mayúsculas y tildes, y no filtra si no hay lista', () => {
+  const src = { mustMatch: ['Argentina', 'Perón'] };
+  assert.equal(matchesSource(src, { title: 'Crisis en ARGENTINA', summary: '' }), true);
+  assert.equal(matchesSource(src, { title: 'Homenaje', summary: 'a peron en Tucumán' }), true);
+  assert.equal(matchesSource(src, { title: 'Elecciones en Chile', summary: 'Santiago' }), false);
+  assert.equal(matchesSource({}, { title: 'Cualquier cosa' }), true);
+});
+
+test('ingesta: un medio regional solo aporta notas que mencionan el país', async () => {
+  const repo = createMemoryRepo();
+  const sources = [{ outlet: 'R', owner: 'GR', country: 'AR', feedUrl: 'https://r.invalid/rss', mustMatch: ['Argentina'] }];
+  const xml = `<rss><channel>
+    <item><title>Inflación en Argentina</title><link>https://r.invalid/1</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate></item>
+    <item><title>Clima en Lima</title><link>https://r.invalid/2</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>Perú</description></item>
+    <item><title>Fútbol</title><link>https://r.invalid/3</link><pubDate>Wed, 04 Nov 2026 11:00:00 GMT</pubDate><description>El seleccionado de Argentina ganó</description></item>
+  </channel></rss>`;
+  const r = await ingestSources({ sources, fetchFn: okFetch({ 'https://r.invalid/rss': xml }), repo, now: NOWD });
+  assert.equal(r.fresh, 2);
 });
 
 test('flujo completo con datos de ejemplo: 10 hechos y cambio de 3 horas', async () => {

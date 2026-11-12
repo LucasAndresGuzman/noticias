@@ -1,8 +1,46 @@
 [
-  { "outlet": "CNN en Español", "owner": "Warner Bros. Discovery", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Country provisional: ver README." },
-  { "outlet": "LN+", "owner": "Grupo La Nación", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
-  { "outlet": "C5N", "owner": "Grupo Indalo", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
-  { "outlet": "A24", "owner": "Grupo América", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS." },
-  { "outlet": "Telefe", "owner": "Grupo Scaglione", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Verificar el grupo propietario vigente." },
-  { "outlet": "BBC", "owner": "BBC", "country": "AR", "feedUrl": "", "nota": "Completar con la URL real del RSS. Country provisional: ver README." }
+  {
+    "outlet": "CNN en Español",
+    "owner": "Warner Bros. Discovery",
+    "country": "AR",
+    "feedUrl": "https://cnnespanol.cnn.com/feed/",
+    "mustMatch": ["Argentina", "argentino", "argentina", "Milei", "Buenos Aires"],
+    "nota": "Cubre toda Latinoamérica: solo se toman notas que mencionan Argentina. Un lector de feeds informó en feb-2026 que esta dirección no respondía: revisar el registro del worker."
+  },
+  {
+    "outlet": "LN+",
+    "owner": "Grupo La Nación",
+    "country": "AR",
+    "feedUrl": "https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml",
+    "nota": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal: debe mostrarse así en pantalla."
+  },
+  {
+    "outlet": "C5N",
+    "owner": "Grupo Indalo",
+    "country": "AR",
+    "feedUrl": "",
+    "nota": "Pendiente. El sitio enlaza https://www.c5n.com/contenidos/rss.html (sin verificar); falta la dirección directa del feed. Términos: https://www.c5n.com/terminos-y-condiciones"
+  },
+  {
+    "outlet": "A24",
+    "owner": "Grupo América",
+    "country": "AR",
+    "feedUrl": "",
+    "nota": "Pendiente. No se encontró RSS público en https://www.a24.com. Términos: https://www.a24.com/terminos"
+  },
+  {
+    "outlet": "Telefe",
+    "owner": "Grupo Scaglione",
+    "country": "AR",
+    "feedUrl": "",
+    "nota": "Pendiente. No se encontró RSS público en https://www.mitelefe.com. Términos: https://www.mitelefe.com/legales/terminos-de-uso. Verificar el grupo propietario vigente."
+  },
+  {
+    "outlet": "BBC",
+    "owner": "BBC",
+    "country": "AR",
+    "feedUrl": "https://feeds.bbci.co.uk/mundo/rss.xml",
+    "mustMatch": ["Argentina", "argentino", "argentina", "Milei", "Buenos Aires"],
+    "nota": "BBC Mundo cubre toda Latinoamérica: solo se toman notas que mencionan Argentina."
+  }
 ]

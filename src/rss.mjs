@@ -35,7 +35,7 @@ function link(block) {
   return '';
 }
 
-/** Devuelve [{ title, link, published (ISO) }]. Omite entradas sin título, enlace o fecha válida. */
+/** Devuelve [{ title, link, published (ISO), summary }]. Omite entradas sin título, enlace o fecha válida. */
 export function parseFeed(xml) {
   const blocks = [
     ...xml.matchAll(/<item[\s>][\s\S]*?<\/item>/gi),
@@ -49,7 +49,8 @@ export function parseFeed(xml) {
     const date = tag(b, 'pubDate') || tag(b, 'published') || tag(b, 'updated') || tag(b, 'dc:date');
     const t = Date.parse(date);
     if (!title || !/^https?:\/\//i.test(url) || Number.isNaN(t)) continue;
-    out.push({ title, link: url, published: new Date(t).toISOString() });
+    const summary = strip(tag(b, 'description') || tag(b, 'summary')).slice(0, 600);
+    out.push({ title, link: url, published: new Date(t).toISOString(), summary });
   }
   return out;
 }

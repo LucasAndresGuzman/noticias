@@ -4,6 +4,19 @@ import { parseFeed } from './rss.mjs';
 
 export const idFromUrl = (url) => createHash('sha1').update(url).digest('hex').slice(0, 16);
 
+const fold = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+/**
+ * Si la fuente define `mustMatch` (lista de palabras), solo pasan las notas cuyo título o resumen
+ * contiene alguna, sin distinguir mayúsculas ni tildes. Sirve para medios que cubren varios países.
+ */
+export function matchesSource(source, item) {
+  const words = source.mustMatch;
+  if (!Array.isArray(words) || words.length === 0) return true;
+  const hay = fold(`${item.title} ${item.summary ?? ''}`);
+  return words.some((w) => hay.includes(fold(w)));
+}
+
 /** Lee config/sources.json y deja solo las fuentes con URL de feed cargada. */
 export function loadSources(path = new URL('../config/sources.json', import.meta.url)) {
   const all = JSON.parse(readFileSync(path, 'utf8'));
@@ -26,7 +39,7 @@ export async function ingestSources({ sources, fetchFn = fetch, repo, now = new 
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const items = parseFeed(await res.text()).filter(
-        (i) => Date.parse(i.published) <= now.getTime() + 10 * 60e3 // descarta fechas futuras
+        (i) => Date.parse(i.published) <= now.getTime() + 10 * 60e3 && matchesSource(s, i) // descarta fechas futuras y notas ajenas al país
       );
       const arts = items.map((i) => ({
         id: idFromUrl(i.link),
