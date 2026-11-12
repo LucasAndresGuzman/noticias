@@ -50,7 +50,8 @@
     "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla. Verificar el grupo propietario vigente.",
     "stripTitleSuffix": [
       " - Telefe"
-    ]
+    ],
+    "stripTitlePattern": "\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$"
   },
   {
     "outlet": "BBC",

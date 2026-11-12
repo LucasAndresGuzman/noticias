@@ -17,13 +17,24 @@ export function matchesSource(source, item) {
   return words.some((w) => hay.includes(fold(w)));
 }
 
-/** Quita el sufijo que algunos agregadores suman al título (p. ej. " - CNN en Español"). Acepta uno o varios. */
+/**
+ * Quita el sufijo que algunos agregadores suman al título (p. ej. " - CNN en Español").
+ * `stripTitleSuffix`: uno o varios textos exactos. `stripTitlePattern`: expresión regular para variantes
+ * (p. ej. " - Telefe Córdoba"). Nunca deja el título vacío.
+ */
 export function cleanTitle(source, title) {
-  const list = [].concat(source.stripTitleSuffix ?? []);
-  for (const suf of list) {
-    if (suf && title.length > suf.length && title.toLowerCase().endsWith(suf.toLowerCase())) return title.slice(0, -suf.length).trim();
+  let out = title;
+  for (const suf of [].concat(source.stripTitleSuffix ?? [])) {
+    if (suf && out.length > suf.length && out.toLowerCase().endsWith(suf.toLowerCase())) {
+      out = out.slice(0, -suf.length).trim();
+      break;
+    }
   }
-  return title;
+  if (source.stripTitlePattern) {
+    const cut = out.replace(new RegExp(source.stripTitlePattern, 'iu'), '').trim();
+    if (cut) out = cut;
+  }
+  return out;
 }
 
 /** Un titular real tiene al menos 4 palabras. Descarta páginas de etiquetas o secciones ("Papa", "Netflix"). */

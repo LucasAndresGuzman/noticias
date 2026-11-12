@@ -1,0 +1,46 @@
+[
+  {
+    "id": "papa-leon-xiv-mision-lujan",
+    "category": "Sociedad",
+    "articleIds": ["7cc41905f50dee1f", "770c0b7489bc2d3d", "6b06792e7180d2f4", "508371bb187f2574"],
+    "evidence": [
+      {
+        "id": "e1",
+        "type": "official_statement",
+        "origin": "santa-sede",
+        "label": "Homilía oficial de León XIV en la misa de Luján, 11/11/2026",
+        "url": "https://www.vatican.va/content/leo-xiv/en/homilies/2026/documents/20261111-argentina-messa-lujan.html"
+      },
+      {
+        "id": "e2",
+        "type": "official_statement",
+        "origin": "santa-sede",
+        "label": "Boletín de la Sala de Prensa de la Santa Sede, 11/11/2026: partida de Buenos Aires hacia Lima a las 14:38 (hora local), con el presidente Milei en la despedida",
+        "url": "https://press.vatican.va/content/salastampa/es/bollettino/pubblico/2026/11/11/111126d.html"
+      },
+      {
+        "id": "e3",
+        "type": "independent_outlets",
+        "origin": "prensa-argentina",
+        "label": "Cobertura de varios medios: La Nación, C5N, A24, Telefe, CNN en Español, Ámbito y Infobae. No se verificó que cada uno tenga fuente propia.",
+        "url": "https://www.ambito.com/politica/papa-leon-XIV-argentina-javier-milei-iglesia-vaticano-caba-lujan-misa-carcel-devoto-en-vivo-minuto-a-minuto-11-noviembre"
+      }
+    ],
+    "note": "Verificado contra fuentes oficiales: lugar, fecha y partida. Sin video verificado ni cifras de asistencia confirmadas: las notas citan entre 2 y 3,5 millones de personas y no coinciden entre sí."
+  },
+  {
+    "id": "papa-leon-xiv-despedida-dos-papas",
+    "category": "Sociedad",
+    "articleIds": ["bab641d2caf5e15a", "76f5ec4686d874f0", "6b13267803d52403", "89ba552c1a74a1eb"],
+    "evidence": [
+      {
+        "id": "e1",
+        "type": "independent_outlets",
+        "origin": "prensa-argentina",
+        "label": "La frase \"este país desde ahora tiene dos Papas\" aparece en Infobae, C5N, A24, Telefe y otros medios",
+        "url": "https://www.infobae.com/sociedad/2026/11/11/el-mensaje-de-despedida-de-leon-xiv-este-pais-ahora-tiene-dos-papas-uno-que-ha-nacido-aqui-y-otro-por-adopcion/"
+      }
+    ],
+    "note": "Falta una fuente primaria: no se encontró el texto oficial del discurso de despedida en las fuentes revisadas (la nota de Vatican News consultada no incluye la frase)."
+  }
+]

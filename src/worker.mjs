@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url';
 import { createPgRepo, createPoolFromEnv, ensureSchema } from './repo-pg.mjs';
 import { loadSources } from './ingest.mjs';
 import { runOnce } from './run.mjs';
+import { syncFacts } from './facts.mjs';
 
 /** Ejecuta `run` cada `intervalMs`, sin superponer corridas y sin caerse ante un error. */
 export function startLoop({ run, intervalMs, log = console }) {
@@ -34,6 +35,7 @@ async function main() {
   startLoop({
     intervalMs: minutes * 60e3,
     run: async () => {
+      await syncFacts(repo);
       const r = await runOnce({ repo, sources });
       console.log(JSON.stringify({ at: r.generatedAt, nuevas: r.ingest.fresh, publicadas: r.published, errores: r.ingest.errors }));
     }

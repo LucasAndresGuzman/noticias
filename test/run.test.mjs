@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createMemoryRepo } from '../src/repo-memory.mjs';
 import { readFileSync } from 'node:fs';
+import { loadFacts, syncFacts } from '../src/facts.mjs';
 import { cleanTitle, idFromUrl, ingestSources, isHeadline, loadSources, matchesSource } from '../src/ingest.mjs';
 import { runOnce } from '../src/run.mjs';
 import { validateFact } from '../src/validate.mjs';
@@ -163,4 +164,34 @@ test('runOnce ignora notas ya guardadas con título corto', async () => {
   await repo.upsertArticles([{ id: 'c1', outlet: 'A24', owner: 'G', title: 'Netflix', publishedAt: '2026-11-04T11:00:00Z', country: 'AR', url: 'https://a.invalid/c1' }]);
   const r = await runOnce({ repo, sources: [], now: NOWD });
   assert.equal(r.articles, 0);
+});
+
+test('config/facts.json: todos los hechos son válidos y cada prueba cita su fuente', () => {
+  const facts = loadFacts();
+  assert.ok(facts.length >= 1);
+  for (const f of facts) for (const e of f.evidence) {
+    assert.ok(e.label && /^https:\/\//.test(e.url), `la prueba ${f.id}/${e.id} necesita label y url`);
+  }
+});
+
+test('hecho curado: dos fuentes oficiales del mismo origen cuentan una vez y el nivel es 30', async () => {
+  const repo = createMemoryRepo();
+  const f = loadFacts().find((x) => x.id === 'papa-leon-xiv-mision-lujan');
+  const mk = (id, outlet, owner) => ({ id, outlet, owner, title: 'León XIV cierra su visita a la Argentina con una misa multitudinaria en Luján', publishedAt: '2026-11-11T10:00:00Z', country: 'AR', url: `https://x.invalid/${id}` });
+  await repo.upsertArticles([mk(f.articleIds[0], 'Telefe', 'G1'), mk(f.articleIds[2], 'C5N', 'G2'), mk(f.articleIds[3], 'CNN en Español', 'G3')]);
+  assert.equal(await syncFacts(repo), loadFacts().length);
+  const r = await runOnce({ repo, sources: [], now: new Date('2026-11-11T12:00:00Z') });
+  assert.equal(r.published, 1);
+  const row = (await repo.latestSnapshot()).payload.top.AR[0];
+  assert.equal(row.level, 30);
+  assert.equal(row.label, 'Respaldo parcial');
+  assert.equal(row.outlets, 3);
+});
+
+test('cleanTitle: el patrón quita variantes regionales de Telefe sin vaciar el título', () => {
+  const s = { stripTitlePattern: '\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$' };
+  assert.equal(cleanTitle(s, 'Milei despidió al Papa - Telefe Córdoba'), 'Milei despidió al Papa');
+  assert.equal(cleanTitle(s, 'Milei despidió al Papa - Telefe Noticias'), 'Milei despidió al Papa');
+  assert.equal(cleanTitle(s, 'Milei despidió al Papa - Telefe'), 'Milei despidió al Papa');
+  assert.equal(cleanTitle(s, 'Telefe estrena un ciclo nuevo'), 'Telefe estrena un ciclo nuevo');
 });
