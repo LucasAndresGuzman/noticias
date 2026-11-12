@@ -72,6 +72,15 @@ export function createPgRepo(pool) {
       return Object.fromEntries(rows.map((r) => [r.fact_id, r.level]));
     },
 
+    // Evolución del nivel de un hecho desde sinceIso, de más viejo a más nuevo.
+    async levelHistory(factId, sinceIso) {
+      const { rows } = await pool.query(
+        `select at, level from level_history where fact_id = $1 and at >= $2 order by at asc limit 600`,
+        [factId, sinceIso]
+      );
+      return rows.map((r) => ({ at: iso(r.at), level: r.level }));
+    },
+
     async recordLevels(list) {
       for (const r of list) {
         await pool.query(

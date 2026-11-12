@@ -1,6 +1,8 @@
 // Lógica de la API, independiente del servidor (sirve en Render o como función en Vercel).
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { CAP, LABELS, WEIGHTS } from './engine/scoring.mjs';
+import { COVERAGE_FULL, DIVERSITY_FULL, RANK_WEIGHTS, WINDOW_HOURS } from './engine/ranking.mjs';
 
 const sha = (s) => createHash('sha256').update(s).digest();
 
@@ -42,6 +44,7 @@ export function describeSources(path = new URL('../config/sources.json', import.
       owner: s.owner,
       country: s.country,
       method: !s.feedUrl ? 'none' : /news\.google\.com/.test(s.feedUrl) ? 'google-news' : 'rss',
+      tipo: s.tipo ?? '',
       note: s.notaPublica ?? '',
       ownership: s.propiedad ?? '',
       ownershipAsOf: s.propiedadAl ?? '',
@@ -90,6 +93,27 @@ export async function handleRequest(req, { repo, env = process.env }) {
   }
 
   if (path === '/api/sources') return json(200, { sources: describeSources() });
+
+  // Evolución del nivel de un hecho en las últimas 24 horas (para el gráfico de la ficha).
+  if (path === '/api/history') {
+    const factId = url.searchParams.get('factId') ?? '';
+    if (!/^[a-z0-9-]{1,80}$/.test(factId)) return json(400, { error: 'factId inválido' });
+    const since = new Date(Date.now() - 24 * 3600e3).toISOString();
+    return json(200, { factId, points: await repo.levelHistory(factId, since) });
+  }
+
+  // Reglas del cálculo, tomadas del motor para que la página no las repita a mano.
+  if (path === '/api/method') {
+    return json(200, {
+      cap: CAP,
+      weights: WEIGHTS,
+      labels: LABELS,
+      ranking: RANK_WEIGHTS,
+      windowHours: WINDOW_HOURS,
+      coverageFull: COVERAGE_FULL,
+      diversityFull: DIVERSITY_FULL
+    });
+  }
 
   if (path === '/api/pending') {
     return json(200, {

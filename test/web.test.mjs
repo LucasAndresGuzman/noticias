@@ -73,3 +73,42 @@ test('las notas son texto: la página arma el contenido sin innerHTML ni eval', 
   const { body } = await handleRequest(get('/', auth), { repo, env: ENV });
   assert.ok(!/innerHTML|outerHTML|document\.write|eval\(/.test(body));
 });
+
+test('/api/sources incluye el tipo de cada medio', async () => {
+  const repo = createMemoryRepo();
+  const { sources } = JSON.parse((await handleRequest(get('/api/sources', auth), { repo, env: ENV })).body);
+  assert.ok(sources.every((s) => s.tipo));
+});
+
+test('/api/history devuelve la evolución del nivel de un hecho y valida el identificador', async () => {
+  const repo = createMemoryRepo();
+  const now = new Date();
+  await repo.recordLevels([
+    { factId: 'hecho-de-prueba', at: new Date(now - 3600e3).toISOString(), level: 20 },
+    { factId: 'hecho-de-prueba', at: new Date(now - 7200e3).toISOString(), level: 10 },
+    { factId: 'otro-hecho', at: now.toISOString(), level: 99 },
+    { factId: 'hecho-de-prueba', at: new Date(now - 30 * 3600e3).toISOString(), level: 1 }
+  ]);
+  const ok = await handleRequest(get('/api/history?factId=hecho-de-prueba', auth), { repo, env: ENV });
+  assert.equal(ok.status, 200);
+  const { points } = JSON.parse(ok.body);
+  assert.deepEqual(points.map((p) => p.level), [10, 20], 'solo las últimas 24 h, de la más vieja a la más nueva, y solo de ese hecho');
+  const bad = await handleRequest(get('/api/history?factId=../x', auth), { repo, env: ENV });
+  assert.equal(bad.status, 400);
+  assert.equal((await handleRequest(get('/api/history?factId=hecho-de-prueba'), { repo, env: ENV })).status, 401);
+});
+
+test('/api/method expone los pesos y etiquetas del motor', async () => {
+  const repo = createMemoryRepo();
+  const m = JSON.parse((await handleRequest(get('/api/method', auth), { repo, env: ENV })).body);
+  assert.equal(m.cap, 95);
+  assert.equal(m.weights.judicial_resolution, 25);
+  assert.equal(m.labels[0].name, 'Confirmado');
+  assert.equal(m.ranking.coverage + m.ranking.diversity + m.ranking.velocity, 1);
+});
+
+test('la página tiene las tres pantallas del menú', async () => {
+  const repo = createMemoryRepo();
+  const { body } = await handleRequest(get('/', auth), { repo, env: ENV });
+  for (const t of ['Noticias del día', 'Comparador de medios', 'Metodología', '#/hecho/', '#/comparador', '#/metodologia']) assert.ok(body.includes(t), t);
+});

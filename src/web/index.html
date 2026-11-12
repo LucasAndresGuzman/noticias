@@ -7,137 +7,220 @@
 <title>Verificador de noticias · Argentina</title>
 <style>
   :root {
-    --bg: #f6f4ef; --card: #ffffff; --ink: #1d1b16; --muted: #5f5b52; --line: #dcd7cb; --soft: #efece3;
-    --accent: #1f3a5f; --link: #1f4f99;
-    --c-confirmado: #1d6b3f; --c-alto: #1c6a6e; --c-medio: #2a5ea8; --c-parcial: #a5640a; --c-sin: #6b665c;
-    --c-disputa: #b3470f; --c-desmentido: #a32525;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --bg: #f4f6f8; --card: #ffffff; --ink: #111827; --muted: #3a4656; --subtle: #5b6472; --line: #d9dee5; --soft: #eef1f5;
+    --accent: #12457a; --accent-dark: #0e3b66; --accent-ink: #ffffff; --link: #12457a;
+    --info-bg: #e8f0fa; --info-line: #b9cfea; --warn-bg: #fdf6ec; --warn-line: #f0d9b8; --warn-ink: #7a3a06;
+    --strip: #111827; --strip-ink: #f9fafb; --track: #d9dee5;
+    --serif: "Newsreader", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --chip-bg: #fff; --chip-fg: #3a4656; --chip-bd: #8a94a3; --bar: #8a94a3;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #14130f; --card: #1d1b16; --ink: #ece8dc; --muted: #a39e90; --line: #36332a; --soft: #26231c;
-      --accent: #9db8de; --link: #8db4ee;
-      --c-confirmado: #5fc48a; --c-alto: #5cc0c4; --c-medio: #7fa7e6; --c-parcial: #e3a24a; --c-sin: #a39e90;
-      --c-disputa: #ee8a55; --c-desmentido: #ee7b7b;
+      --bg: #0f141b; --card: #171e28; --ink: #eef1f5; --muted: #b9c2cf; --subtle: #98a3b3; --line: #2b3646; --soft: #1e2733;
+      --accent: #7fb0ea; --accent-dark: #a9caf3; --accent-ink: #0b1a2c; --link: #8dbcf2;
+      --info-bg: #14263b; --info-line: #29476b; --warn-bg: #2b2013; --warn-line: #5a4020; --warn-ink: #f0b676;
+      --strip: #070a0e; --strip-ink: #dfe5ee; --track: #2b3646;
     }
   }
+  /* Etiquetas de estado */
+  .s-confirmado { --chip-bg: #0e3b66; --chip-fg: #fff; --chip-bd: #0e3b66; --bar: #12457a; }
+  .s-alto { --chip-bg: #dce9f7; --chip-fg: #0e3b66; --chip-bd: #dce9f7; --bar: #12457a; }
+  .s-medio { --chip-bg: #e8ecf1; --chip-fg: #243142; --chip-bd: #e8ecf1; --bar: #12457a; }
+  .s-parcial { --chip-bg: #f1f3f6; --chip-fg: #3a4656; --chip-bd: #b6bec9; --bar: #5b6472; }
+  .s-sin { --chip-bg: #fff; --chip-fg: #3a4656; --chip-bd: #8a94a3; --bar: #8a94a3; }
+  .s-disputa { --chip-bg: #fbe8d2; --chip-fg: #7a3a06; --chip-bd: #fbe8d2; --bar: #c2610c; }
+  .s-desmentido { --chip-bg: #7f1d1d; --chip-fg: #fff; --chip-bd: #7f1d1d; --bar: #7f1d1d; }
+  @media (prefers-color-scheme: dark) {
+    .s-confirmado { --chip-bg: #7fb0ea; --chip-fg: #0b1a2c; --chip-bd: #7fb0ea; --bar: #7fb0ea; }
+    .s-alto { --chip-bg: #1f3f63; --chip-fg: #cfe3fa; --chip-bd: #1f3f63; --bar: #7fb0ea; }
+    .s-medio { --chip-bg: #263243; --chip-fg: #d5dce7; --chip-bd: #263243; --bar: #7fb0ea; }
+    .s-parcial { --chip-bg: #1e2733; --chip-fg: #c4ccd8; --chip-bd: #4a586b; --bar: #98a3b3; }
+    .s-sin { --chip-bg: #171e28; --chip-fg: #c4ccd8; --chip-bd: #5b6879; --bar: #5b6879; }
+    .s-disputa { --chip-bg: #4a2f14; --chip-fg: #f6c58f; --chip-bd: #4a2f14; --bar: #e08a3c; }
+    .s-desmentido { --chip-bg: #f0a5a5; --chip-fg: #3a0d0d; --chip-bd: #f0a5a5; --bar: #f0a5a5; }
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+  html { scroll-behavior: auto; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); }
   a { color: var(--link); }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px 64px; }
-  header.top { padding: 28px 0 16px; border-bottom: 2px solid var(--ink); display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
-  h1 { font: 700 28px/1.2 var(--serif); margin: 0; }
-  .sub { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
-  .stamp { font-size: 13px; color: var(--muted); text-align: right; }
-  .stamp.stale { color: var(--c-disputa); font-weight: 600; }
-  .note { background: var(--soft); border-left: 4px solid var(--accent); padding: 12px 14px; margin: 20px 0; font-size: 14.5px; }
-  .note strong { color: var(--ink); }
-  .state { padding: 28px 0; color: var(--muted); }
-  .state.err { color: var(--c-desmentido); }
+  a:focus-visible, button:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 4px; }
+  h1, h2, h3 { margin: 0; }
+  .serif { font-family: var(--serif); font-weight: 600; }
+  .mono { font-family: var(--mono); }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
 
-  article.fact { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 18px 14px; margin: 16px 0; }
-  .head { display: flex; gap: 14px; align-items: flex-start; }
-  .pos { font: 700 30px/1 var(--serif); color: var(--muted); min-width: 36px; }
-  .head h2 { font: 700 20px/1.3 var(--serif); margin: 0 0 4px; }
-  .meta { font-size: 13.5px; color: var(--muted); }
-  .level { margin: 14px 0 6px; }
-  .level-row { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; }
-  .badge { font-weight: 700; font-size: 14px; color: var(--tone); border: 1.5px solid var(--tone); padding: 2px 10px; border-radius: 999px; }
-  .num { font-size: 14px; color: var(--muted); }
-  .num b { font-size: 20px; color: var(--ink); }
-  .bar { height: 10px; background: var(--soft); border-radius: 6px; overflow: hidden; margin-top: 8px; border: 1px solid var(--line); }
-  .bar > i { display: block; height: 100%; background: var(--tone); }
-  .scale { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-top: 3px; }
-  .fact-note { font-size: 14.5px; margin: 12px 0 4px; }
-  .alert { background: color-mix(in srgb, var(--c-disputa) 14%, transparent); border: 1px solid var(--c-disputa); padding: 8px 12px; border-radius: 6px; margin: 10px 0; font-size: 14px; }
+  .strip { background: var(--strip); color: var(--strip-ink); padding: 10px 24px; font-size: 13px; line-height: 1.4; text-align: center; }
+  .topbar { background: var(--card); border-bottom: 1px solid var(--line); }
+  .topbar .container { padding-top: 16px; padding-bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px 32px; align-items: center; justify-content: space-between; }
+  .brand { font: 600 26px/1.1 var(--serif); letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
+  nav.menu { display: flex; flex-wrap: wrap; gap: 4px 24px; font-size: 15px; font-weight: 500; }
+  nav.menu a { color: var(--muted); text-decoration: none; padding: 10px 0 4px; border-bottom: 2px solid transparent; min-height: 44px; display: inline-flex; align-items: center; }
+  nav.menu a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
 
-  details { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 8px; }
-  summary { cursor: pointer; font-weight: 600; font-size: 15px; padding: 4px 0; }
-  summary:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--link); outline-offset: 2px; border-radius: 3px; }
-  ul.ev { list-style: none; margin: 8px 0 4px; padding: 0; }
-  ul.ev li { padding: 8px 0; border-bottom: 1px dashed var(--line); display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; font-size: 14.5px; }
-  ul.ev li:last-child { border-bottom: 0; }
-  .ev-type { font-weight: 600; }
-  .pts { font-variant-numeric: tabular-nums; font-weight: 700; text-align: right; }
-  .pts.zero { color: var(--muted); font-weight: 400; }
-  .ev-why { grid-column: 1 / -1; color: var(--muted); font-size: 13px; }
-  .total { display: flex; justify-content: space-between; font-weight: 700; padding-top: 8px; border-top: 2px solid var(--line); font-size: 15px; }
-  .outlet { margin: 10px 0 14px; }
-  .outlet h4 { margin: 0; font-size: 15px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
-  .outlet .owner { font-weight: 400; color: var(--muted); font-size: 13px; }
-  .outlet .onote { font-size: 13px; color: var(--muted); margin: 3px 0 4px; }
-  .outlet ul { margin: 4px 0 0; padding-left: 18px; font-size: 14px; }
-  .outlet li { margin: 2px 0; }
-  .via { font-size: 12px; color: var(--muted); }
+  main { padding: 36px 0 56px; }
+  .stack { display: flex; flex-direction: column; gap: 28px; }
+  .cols { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+  .col-main { flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  .col-side { flex: 1 1 300px; max-width: 380px; min-width: 280px; display: flex; flex-direction: column; gap: 20px; }
 
-  section.sources { margin-top: 40px; }
-  h3 { font: 700 20px/1.3 var(--serif); margin: 0 0 8px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--card); border: 1px solid var(--line); }
-  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pillbtn { min-height: 44px; padding: 0 20px; border-radius: 22px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); font: 500 15px var(--sans); }
+  .pillbtn[disabled] { border-color: var(--line); background: var(--card); color: var(--subtle); }
+  h1.page { font: 600 44px/1.08 var(--serif); letter-spacing: -0.015em; }
+  .lead { margin: 10px 0 0; font-size: 16px; color: var(--muted); max-width: 720px; }
+  .headrow { display: flex; flex-wrap: wrap; gap: 12px 32px; align-items: flex-end; justify-content: space-between; }
+  .stamp { font: 13px/1.6 var(--mono); color: var(--muted); text-align: right; }
+  .stamp.stale { color: var(--warn-ink); font-weight: 600; }
+
+  .chip { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; background: var(--chip-bg); color: var(--chip-fg); border: 1px solid var(--chip-bd); white-space: nowrap; }
+  .tag { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 13px; background: var(--soft); color: var(--ink); }
+  .tag.alert { background: #fbe8d2; color: #7a3a06; font-weight: 600; }
+  @media (prefers-color-scheme: dark) { .tag.alert { background: #4a2f14; color: #f6c58f; } }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .card.pad-l { padding: 28px; }
+  .card h2 { font: 600 22px/1.25 var(--serif); }
+  .card h2.big { font-size: 26px; }
+  .card p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
+  .card.info { background: var(--info-bg); border-color: var(--info-line); }
+  .card.info p { color: var(--ink); }
+  .btn { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 600; text-decoration: none; }
+  .linkcard { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; color: var(--ink); font-size: 15px; font-weight: 600; text-decoration: none; }
+
+  a.row { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; color: var(--ink); text-decoration: none; }
+  a.row:hover { border-color: var(--accent); }
+  .row .rank { font: 500 28px/1 var(--mono); color: var(--subtle); width: 44px; flex: 0 0 auto; }
+  .row .mid { flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .row .t { font: 600 22px/1.25 var(--serif); }
+  .row .m { font-size: 14px; color: var(--muted); line-height: 1.4; }
+  .row .right { flex: 0 0 210px; display: flex; flex-direction: column; gap: 8px; }
+  .lvl { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .lvl b { font: 500 30px/1 var(--mono); }
+  .lvl .of { font: 13px var(--mono); color: var(--muted); }
+  .delta { font: 13px var(--mono); color: var(--muted); }
+  .delta.down { color: var(--warn-ink); font-weight: 600; }
+  .bar { height: 8px; border-radius: 4px; background: var(--track); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 4px; background: var(--bar); }
+  .cap { font-size: 12px; color: var(--subtle); }
+
+  .legend { display: flex; flex-direction: column; gap: 10px; }
+  .legend > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .legend .r { font: 13px var(--mono); color: var(--muted); }
+  .foot { border-top: 1px solid var(--line); padding-top: 14px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+  ol.plain { margin: 0; padding-left: 22px; font-size: 14px; }
+  ol.plain li { margin: 8px 0; }
+  ol.plain .s { color: var(--muted); font-size: 12.5px; }
+  details.fold > summary { cursor: pointer; font: 600 22px/1.25 var(--serif); list-style: revert; }
+
+  .back { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; text-decoration: none; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .meta-row .mono { font-size: 13px; color: var(--muted); }
+  h1.fact { font: 600 40px/1.12 var(--serif); letter-spacing: -0.015em; max-width: 900px; }
+  .big-level { display: flex; flex-wrap: wrap; gap: 20px 40px; align-items: flex-end; justify-content: space-between; }
+  .big-level h2 { font: 600 14px var(--sans); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .big-num { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .big-num b { font: 500 72px/1 var(--mono); }
+  .big-num .of { font: 16px var(--mono); color: var(--muted); }
+  .big-level p { max-width: 380px; }
+  svg.chart { display: block; width: 100%; height: auto; max-width: 100%; }
+  svg.chart text { font-family: var(--mono); font-size: 11px; fill: var(--subtle); }
+  svg.chart .grid { stroke: var(--line); stroke-width: 1; }
+  svg.chart .base { stroke: var(--subtle); stroke-width: 1; opacity: .6; }
+  svg.chart .ln { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+  svg.chart .dot { fill: var(--accent); }
+  svg.chart .now { fill: var(--accent); stroke: var(--card); stroke-width: 2; }
+  .callout { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 8px; padding: 14px 16px; font-size: 14px; line-height: 1.5; }
+  .callout b { display: block; color: var(--warn-ink); margin-bottom: 4px; }
+  .quiet { color: var(--muted); font-size: 14px; }
+
+  .ev { display: flex; flex-direction: column; }
+  .ev > div { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: flex-start; padding: 16px 0; border-top: 1px solid var(--line); }
+  .ev .body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .ev .name { font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .ev .desc { font-size: 14px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
+  .ev .side { flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+  .ev .eff { font: 500 14px var(--mono); }
+  .brk > div { display: flex; gap: 14px; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.45; }
+  .brk .v { flex: 0 0 auto; font: 500 14px var(--mono); }
+  .brk .v.neg { color: var(--warn-ink); }
+  .brk .total { border-top: 2px solid var(--ink); font-size: 15px; font-weight: 600; padding-top: 12px; }
+
+  .outlet { padding: 14px 0; border-top: 1px solid var(--line); }
+  .outlet h3 { font: 600 16px/1.3 var(--sans); display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; }
+  .outlet h3 span { font-weight: 400; color: var(--muted); font-size: 13px; }
+  .outlet ul { margin: 6px 0 0; padding-left: 18px; font-size: 14px; }
+  .outlet li { margin: 3px 0; }
+  .via { font-size: 12px; color: var(--subtle); }
+
+  .picker { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+  .picker label { font-size: 14px; font-weight: 600; }
+  select { min-height: 44px; min-width: 300px; max-width: 100%; padding: 0 14px; border: 1px solid var(--subtle); border-radius: 8px; background: var(--card); color: var(--ink); font: 400 15px var(--sans); }
+  .grid2 { display: flex; flex-wrap: wrap; gap: 20px; }
+  .ocard { flex: 1 1 380px; min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+  .ocard .nm { font: 500 13px var(--mono); color: var(--accent); display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: space-between; }
+  .ocard .hl { font: 600 20px/1.3 var(--serif); }
+  .ocard .hl.none { font: 400 15px var(--sans); color: var(--muted); }
+  .ocard dl { margin: 0; display: grid; grid-template-columns: 110px 1fr; gap: 8px 12px; font-size: 14px; line-height: 1.45; border-top: 1px solid var(--line); padding-top: 12px; }
+  .ocard dt { color: var(--subtle); }
+  .ocard dd { margin: 0; }
+  .ocard ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .scroll { overflow-x: auto; }
+  .matrix { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); min-width: 700px; }
+  .matrix > div { background: var(--card); padding: 12px 10px; font-size: 14px; display: flex; align-items: center; justify-content: center; text-align: center; }
+  .matrix > div.h { background: var(--soft); font-size: 13px; font-weight: 600; }
+  .matrix > div.f { justify-content: flex-start; text-align: left; padding: 14px 16px; line-height: 1.4; }
+  .yes { background: #dce9f7; color: #0e3b66; } .no { background: #fbe8d2; color: #7a3a06; }
+  @media (prefers-color-scheme: dark) { .yes { background: #1f3f63; color: #cfe3fa; } .no { background: #4a2f14; color: #f6c58f; } }
+  .yes, .no { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
   th { background: var(--soft); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-  .tablewrap { overflow-x: auto; }
-  .own { font-size: 13px; color: var(--muted); margin-top: 4px; }
-  .limits { margin-top: 28px; font-size: 14px; color: var(--muted); }
-  .limits li { margin: 4px 0; }
-  .pending { margin: 18px 0 8px; font-size: 14.5px; color: var(--muted); }
-  .cand { margin: 0 0 8px; } .cand ol { margin: 6px 0 0; padding-left: 22px; font-size: 14px; } .cand li { margin: 5px 0; } .cand .m { color: var(--muted); font-size: 12.5px; }
-  @media (max-width: 560px) {
-    h1 { font-size: 23px; } .head h2 { font-size: 18px; } .pos { font-size: 24px; min-width: 28px; }
-    article.fact { padding: 14px 12px 10px; }
-    /* La tabla de medios pasa a fichas apiladas para que la aclaración se lea completa. */
-    .tablewrap { overflow: visible; }
-    table, tbody, tr, td { display: block; }
-    thead { display: none; }
-    tr { padding: 10px 0; border-bottom: 1px solid var(--line); }
-    td { border: 0; padding: 3px 12px; }
+  td .own { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .tablebox { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .prose p, .prose li { font-size: 15px; line-height: 1.6; color: var(--ink); }
+  .prose ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .state { padding: 28px 0; color: var(--muted); }
+  .state.err { color: var(--warn-ink); font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .container { padding: 0 16px; }
+    svg.chart text { font-size: 19px; }
+    h1.page { font-size: 32px; } h1.fact { font-size: 28px; } .big-num b { font-size: 56px; }
+    .row .t { font-size: 19px; } .row .right { flex: 1 1 100%; } a.row { padding: 16px; }
+    .card, .card.pad-l { padding: 18px; }
+    .stamp { text-align: left; }
+    select { min-width: 0; width: 100%; }
+    .ocard dl { grid-template-columns: 1fr; gap: 2px; } .ocard dt { margin-top: 8px; }
+    /* Las tablas pasan a fichas apiladas para que se lean completas. */
+    table, tbody, tr, td { display: block; } thead { display: none; }
+    tr { padding: 10px 0; border-bottom: 1px solid var(--line); } td { border: 0; padding: 3px 12px; }
     td::before { content: attr(data-label); display: block; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <div>
-      <h1>Verificador de noticias</h1>
-      <p class="sub">Argentina · últimas 24 horas · prueba privada</p>
-    </div>
-    <div class="stamp" id="stamp" aria-live="polite">Cargando…</div>
-  </header>
-
-  <div class="note">
-    <strong>Cómo leer esto.</strong> El <em>nivel de respaldo</em> cuenta cuánta evidencia verificable hay detrás de un hecho
-    (declaraciones oficiales, resoluciones, videos con fecha confirmada, medios independientes). <strong>No es la probabilidad de que sea cierto.</strong>
-    Cada prueba tiene su enlace para que puedas revisarla. Los pesos son valores iniciales, todavía sin calibrar.
+<div class="strip">Prueba privada · El nivel de respaldo cuenta evidencia verificable; no es la probabilidad de que algo sea cierto. La evidencia se carga a mano y cada hecho se revisa antes de publicarse.</div>
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="#/">Verificador de noticias</a>
+    <nav class="menu" aria-label="Secciones" id="menu">
+      <a href="#/" data-k="home">Noticias del día</a>
+      <a href="#/comparador" data-k="comp">Comparador de medios</a>
+      <a href="#/metodologia" data-k="met">Metodología</a>
+    </nav>
   </div>
-
-  <main id="list"><p class="state">Cargando el Top 10…</p></main>
-  <p class="pending" id="pending" hidden></p>
-  <details class="cand" id="rev" hidden open>
-    <summary>Esperando revisión humana</summary>
-    <p class="pending" style="margin:6px 0">Temas sensibles: tienen evidencia cargada pero no se publican hasta que una persona los revise.</p>
-    <ol id="revlist"></ol>
-  </details>
-  <details class="cand" id="cand" hidden>
-    <summary>Temas con más cobertura que esperan evidencia</summary>
-    <ol id="candlist"></ol>
-  </details>
-
-  <section class="sources" aria-labelledby="src-h">
-    <h3 id="src-h">Medios y cómo se leen</h3>
-    <p class="sub" style="margin:0 0 12px">Seis medios elegidos por propiedad, tipo de medio y audiencia. La propiedad cambia: cada dato indica su fecha y su fuente, y lo que no se pudo verificar figura como tal.</p>
-    <div class="tablewrap"><table>
-      <thead><tr><th>Medio</th><th>Propiedad</th><th>Cómo se lee</th><th>Aclaración de lectura</th></tr></thead>
-      <tbody id="srcbody"><tr><td colspan="4">Cargando…</td></tr></tbody>
-    </table></div>
-  </section>
-
-  <ul class="limits">
-    <li>Todavía no se verifican videos: ninguna prueba de este MVP es un video con fecha y lugar confirmados.</li>
-    <li>La evidencia se carga a mano y cada hecho se revisa antes de publicarse; esto no es una verificación automática.</li>
-    <li>Un medio "independiente" significa que no hay un vínculo conocido entre sus notas; no siempre se pudo comprobar que tenga fuente propia.</li>
-  </ul>
-</div>
+</header>
+<main>
+  <div class="container" id="view" aria-live="polite"><p class="state">Cargando…</p></div>
+</main>
+<footer style="border-top:1px solid var(--line);background:var(--card)">
+  <div class="container" style="padding-top:20px;padding-bottom:20px;font-size:13px;line-height:1.6;color:var(--muted)">
+    Las etiquetas se calculan con criterios públicos y los casos sensibles pasan por revisión humana. Un nivel de respaldo alto no equivale a certeza absoluta.
+  </div>
+</footer>
 
 <script>
 (function () {
@@ -151,14 +234,25 @@
     single_source: 'Una sola fuente',
     unverified_social: 'Redes sin verificar'
   };
-  var TONES = {
-    'Confirmado': '--c-confirmado', 'Respaldo alto': '--c-alto', 'Respaldo medio': '--c-medio',
-    'Respaldo parcial': '--c-parcial', 'Sin confirmar': '--c-sin', 'En disputa': '--c-disputa', 'Desmentido': '--c-desmentido'
+  var TYPE_DESC = {
+    judicial_resolution: 'Resolución judicial, o comunicado oficial más una prueba independiente.',
+    verified_video: 'Fecha y lugar confirmados por al menos dos métodos.',
+    independent_outlets: 'Varios medios independientes con fuentes propias.',
+    official_statement: 'Comunicado de una parte interesada. Se toma como lo que declara, no como árbitro.',
+    court_filing: 'Denuncia o expediente sin resolución todavía.',
+    single_source: 'Un solo medio o una fuente anónima.',
+    unverified_social: 'Redes sociales sin verificar.'
+  };
+  var STATE = {
+    'Confirmado': 's-confirmado', 'Respaldo alto': 's-alto', 'Respaldo medio': 's-medio', 'Respaldo parcial': 's-parcial',
+    'Sin confirmar': 's-sin', 'En disputa': 's-disputa', 'Desmentido': 's-desmentido'
   };
   var METHODS = { rss: 'RSS directo', 'google-news': 'Google News (intermediario)', none: 'Sin lector todavía' };
   var CAP = 95;
-  var sourcesByOutlet = {};
+  var S = { top: null, sources: [], method: null, byOutlet: {}, err: null };
+  var drawn = { key: null, gen: null };
 
+  /* ---------- utilidades ---------- */
   function el(tag, props, kids) {
     var n = document.createElement(tag);
     if (props) Object.keys(props).forEach(function (k) {
@@ -167,6 +261,12 @@
       else n.setAttribute(k, props[k]);
     });
     (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return n;
+  }
+  var NS = 'http://www.w3.org/2000/svg';
+  function sv(tag, props) {
+    var n = document.createElementNS(NS, tag);
+    Object.keys(props || {}).forEach(function (k) { if (k === 'text') n.textContent = props[k]; else n.setAttribute(k, props[k]); });
     return n;
   }
   function safeUrl(u) { return typeof u === 'string' && /^https:\/\//i.test(u) ? u : null; }
@@ -184,140 +284,447 @@
     return 'hace ' + d + (d === 1 ? ' día' : ' días');
   }
   function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
-  function pts(v) { return (v > 0 ? '+' : '') + v; }
+  function sgn(v) { return (v > 0 ? '+' : '') + v; }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function chip(label) { return el('span', { class: 'chip ' + (STATE[label] || 's-sin'), text: label }); }
+  function viaGoogle(u) {
+    try { return /(^|\.)news\.google\.com$/.test(new URL(u).hostname); } catch (_) { return false; }
+  }
+  function deltaNode(it) {
+    if (it.delta === null || it.delta === undefined) return el('span', { class: 'delta', text: 'sin dato de hace 3 h' });
+    return el('span', { class: 'delta' + (it.delta < 0 ? ' down' : ''), text: it.delta === 0 ? 'sin cambios en 3 h' : sgn(it.delta) + ' pts en 3 h' });
+  }
+  function lastNote(it) {
+    return ago(new Date(Date.parse(S.top.generatedAt) - it.minutesSinceLast * 60000).toISOString());
+  }
+  function findItem(id) { return ((S.top && S.top.items) || []).filter(function (x) { return x.factId === id; })[0]; }
+  function levelBar(it) {
+    return el('div', { class: 'bar', role: 'img', 'aria-label': 'Nivel de respaldo ' + it.level + ' de ' + CAP }, [
+      el('i', { style: 'width:' + Math.min(100, Math.round(it.level / CAP * 100)) + '%' })
+    ]);
+  }
 
-  function card(it, generatedAt) {
-    var tone = 'var(' + (TONES[it.label] || '--c-sin') + ')';
-    var a = el('article', { class: 'fact', style: '--tone:' + tone });
-
-    a.appendChild(el('div', { class: 'head' }, [
-      el('div', { class: 'pos', text: String(it.position) }),
+  /* ---------- pantalla: Noticias del día ---------- */
+  function viewHome() {
+    var d = S.top, root = el('div', { class: 'stack' });
+    root.appendChild(el('div', { class: 'chips', role: 'group', 'aria-label': 'País' }, [
+      el('button', { type: 'button', class: 'pillbtn', 'aria-pressed': 'true', text: 'Argentina' }),
+      el('button', { type: 'button', class: 'pillbtn', disabled: 'disabled', title: 'Próximamente', text: 'Más países · próximamente' })
+    ]));
+    root.appendChild(el('div', { class: 'headrow' }, [
       el('div', null, [
-        el('h2', { text: it.title }),
-        el('div', { class: 'meta', text:
-          [it.category, 'Cubierto por ' + plural(it.outlets, 'medio', 'medios'),
-           plural(it.owners, 'grupo propietario', 'grupos propietarios'),
-           'última nota ' + ago(new Date(Date.parse(generatedAt) - it.minutesSinceLast * 60000).toISOString())
-          ].filter(Boolean).join(' · ') })
-      ])
-    ]));
-
-    var delta = it.delta === null || it.delta === undefined ? 'sin dato de hace 3 horas' :
-      (it.delta === 0 ? 'sin cambios en 3 horas' : pts(it.delta) + ' puntos en 3 horas');
-    a.appendChild(el('div', { class: 'level' }, [
-      el('div', { class: 'level-row' }, [
-        el('span', { class: 'badge', text: it.label }),
-        el('span', { class: 'num' }, [el('b', { text: String(it.level) }), ' de ' + CAP + ' · ' + delta])
+        el('h1', { class: 'page', text: 'Las noticias más relevantes · Argentina' }),
+        el('p', { class: 'lead', text: 'Últimas 24 horas, ordenadas por cobertura cruzada y diversidad de fuentes. Cada noticia muestra cuánta evidencia sólida la respalda hoy, no un veredicto definitivo.' })
       ]),
-      el('div', { class: 'bar', role: 'img', 'aria-label': 'Nivel de respaldo ' + it.level + ' de ' + CAP }, [
-        el('i', { style: 'width:' + Math.min(100, Math.round(it.level / CAP * 100)) + '%' })
-      ]),
-      el('div', { class: 'scale', 'aria-hidden': 'true' }, [el('span', { text: '0' }), el('span', { text: 'Tope: ' + CAP })])
+      el('div', { class: 'stamp', id: 'stamp', 'aria-live': 'polite' })
     ]));
+    updateStamp();
 
-    if (it.videoAlert && it.alertText) a.appendChild(el('div', { class: 'alert', role: 'note', text: 'Alerta: ' + it.alertText }));
-    if (it.note) a.appendChild(el('p', { class: 'fact-note', text: it.note }));
+    var cols = el('div', { class: 'cols' });
+    var main = el('div', { class: 'col-main' });
+    if (!d.items.length) {
+      main.appendChild(el('p', { class: 'state', text: 'Todavía no hay hechos con evidencia cargada para este país.' }));
+    }
+    d.items.forEach(function (it) {
+      var tags = [];
+      if (it.videoAlert && it.alertText) tags.push(el('span', { class: 'tag alert', text: 'Alerta: ' + it.alertText }));
+      if (it.note) tags.push(el('span', { class: 'tag', text: it.note }));
+      main.appendChild(el('a', { class: 'row', href: '#/hecho/' + encodeURIComponent(it.factId) }, [
+        el('div', { class: 'rank', text: pad2(it.position) }),
+        el('div', { class: 'mid' }, [
+          el('div', { class: 't', text: it.title }),
+          el('div', { class: 'm', text: [it.category, plural(it.outlets, 'medio', 'medios'), plural(it.owners, 'grupo propietario', 'grupos propietarios'), 'última nota ' + lastNote(it)].filter(Boolean).join(' · ') }),
+          tags.length ? el('div', { class: 'chips' }, tags) : null
+        ]),
+        el('div', { class: 'right ' + (STATE[it.label] || 's-sin') }, [
+          chip(it.label),
+          el('div', { class: 'lvl' }, [el('b', { text: String(it.level) }), el('span', { class: 'of', text: 'de ' + CAP }), deltaNode(it)]),
+          levelBar(it),
+          el('div', { class: 'cap', text: 'Nivel de respaldo de evidencia' })
+        ])
+      ]));
+    });
 
-    // Cómo se calculó
-    var ev = el('ul', { class: 'ev' });
+    if (d.withoutEvidence > 0) {
+      main.appendChild(el('p', { class: 'quiet', text: 'Además hay ' + plural(d.withoutEvidence, 'tema con cobertura', 'temas con cobertura') + ' sin evidencia cargada todavía. No se publican con un nivel inventado.' }));
+    }
+    if ((d.candidates || []).length) {
+      var cand = el('details', { class: 'card fold' }, [el('summary', { text: 'Temas con más cobertura que esperan evidencia' })]);
+      var ol = el('ol', { class: 'plain' });
+      d.candidates.forEach(function (c) {
+        ol.appendChild(el('li', null, [c.title, el('div', { class: 's', text: plural(c.outlets, 'medio', 'medios') + ': ' + (c.medios || []).join(', ') })]));
+      });
+      cand.appendChild(ol);
+      main.appendChild(cand);
+    }
+    cols.appendChild(main);
+
+    var side = el('aside', { class: 'col-side' });
+    var legend = el('div', { class: 'legend' });
+    var labels = S.method ? S.method.labels : [];
+    labels.forEach(function (l) {
+      legend.appendChild(el('div', null, [chip(l.name), el('span', { class: 'r', text: l.min + '–' + l.max })]));
+    });
+    legend.appendChild(el('div', null, [chip('En disputa'), el('span', { class: 'r', text: 'hay contradicción' })]));
+    side.appendChild(el('div', { class: 'card' }, [
+      el('h2', { text: 'Cómo leer el nivel de respaldo' }),
+      el('p', { text: 'Mide cuánta evidencia sólida e independiente existe hoy, en una escala de 0 a ' + CAP + '. No es la probabilidad de que algo sea verdad. Cien medios que repiten un mismo comunicado cuentan como una sola fuente.' }),
+      legend,
+      el('p', { class: 'foot', text: 'El máximo es ' + CAP + '. Para llegar a “Confirmado” hace falta fuente primaria o judicial más evidencia independiente. Las contradicciones restan.' })
+    ]));
+    if ((d.pendingReview || []).length) {
+      var pl = el('ol', { class: 'plain' });
+      d.pendingReview.forEach(function (r) {
+        pl.appendChild(el('li', null, [r.title, el('div', { class: 's', text: 'Nivel calculado: ' + r.level + ' de ' + CAP + ' (' + r.label + ')' })]));
+      });
+      side.appendChild(el('div', { class: 'card' }, [
+        el('h2', { text: 'Esperando revisión humana' }),
+        el('p', { text: 'Temas sensibles: tienen evidencia cargada, pero no se publican hasta que una persona los revise.' }),
+        pl
+      ]));
+    }
+    side.appendChild(el('div', { class: 'card' }, [
+      el('h2', { text: 'Verificación de videos' }),
+      el('p', { text: 'Todavía no está disponible: ninguna prueba de esta etapa es un video con fecha y lugar confirmados.' })
+    ]));
+    side.appendChild(el('div', { class: 'card info' }, [
+      el('h2', { text: '¿Cómo lo cuenta cada medio?' }),
+      el('p', { text: 'Mirá un mismo hecho en los 6 medios elegidos: qué titular usó cada uno, quién lo posee y cómo se lee.' }),
+      el('a', { class: 'btn', href: '#/comparador', text: 'Abrir comparador' })
+    ]));
+    cols.appendChild(side);
+    root.appendChild(cols);
+    return root;
+  }
+
+  /* ---------- pantalla: ficha de un hecho ---------- */
+  function drawChart(box, points, now) {
+    box.replaceChildren();
+    var W = 680, H = 190, x0 = 34, x1 = 660, yT = 20, yB = 150;
+    var span = 24 * 3600e3;
+    function X(t) { return x0 + (x1 - x0) * Math.max(0, Math.min(1, (t - (now - span)) / span)); }
+    function Y(v) { return yB - (yB - yT) * Math.max(0, Math.min(100, v)) / 100; }
+    var svg = sv('svg', { viewBox: '0 0 ' + W + ' ' + H, class: 'chart', role: 'img' });
+    [[yT, '100'], [(yT + yB) / 2, '50'], [yB, '0']].forEach(function (g, i) {
+      svg.appendChild(sv('line', { x1: x0, y1: g[0], x2: x1, y2: g[0], class: i === 2 ? 'base' : 'grid' }));
+      svg.appendChild(sv('text', { x: 0, y: g[0] + 4, text: g[1] }));
+    });
+    [[-24, '-24 h'], [-18, '-18 h'], [-12, '-12 h'], [-6, '-6 h'], [0, 'ahora']].forEach(function (g) {
+      svg.appendChild(sv('text', { x: X(now + g[0] * 3600e3), y: 174, 'text-anchor': g[0] === -24 ? 'start' : (g[0] === 0 ? 'end' : 'middle'), text: g[1] }));
+    });
+    var pts = points.map(function (p) { return [X(Date.parse(p.at)), Y(p.level), p.level]; });
+    if (pts.length > 1) svg.appendChild(sv('polyline', { class: 'ln', points: pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') }));
+    pts.forEach(function (p, i) {
+      var last = i === pts.length - 1;
+      if (last || pts.length <= 30) svg.appendChild(sv('circle', { class: last ? 'now' : 'dot', cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: last ? 6 : 3.5 }));
+    });
+    var first = points[0], lastP = points[points.length - 1];
+    svg.setAttribute('aria-label', 'Evolución del nivel de respaldo en las últimas 24 horas: ' + points.length + ' mediciones, de ' + first.level + ' a ' + lastP.level + ' puntos.');
+    box.appendChild(svg);
+    if (points.length < 4) box.appendChild(el('p', { class: 'quiet', text: 'Todavía hay pocas mediciones (' + points.length + '): el gráfico se completa con las próximas lecturas, cada 5 minutos.' }));
+  }
+
+  function viewFact(id) {
+    var it = findItem(id);
+    var root = el('div', { class: 'stack' });
+    root.appendChild(el('a', { class: 'back', href: '#/', text: '← Volver a las noticias del día' }));
+    if (!it) {
+      root.appendChild(el('p', { class: 'state', text: 'Este hecho ya no está entre las noticias publicadas. Puede haber salido de las últimas 24 horas o estar esperando revisión.' }));
+      return root;
+    }
+    document.title = it.title + ' · Verificador de noticias';
+    root.appendChild(el('div', { class: 'meta-row ' + (STATE[it.label] || 's-sin') }, [
+      it.category ? el('span', { class: 'tag', text: it.category }) : null,
+      chip(it.label),
+      el('span', { class: 'mono', text: 'Puesto ' + pad2(it.position) + ' · Última nota ' + lastNote(it) })
+    ]));
+    root.appendChild(el('h1', { class: 'fact', text: it.title }));
+    if (it.note) root.appendChild(el('p', { class: 'lead', text: it.note }));
+
+    var cols = el('div', { class: 'cols' });
+    var main = el('div', { class: 'col-main', style: 'gap:24px' });
+
+    var chartBox = el('div', null, [el('p', { class: 'quiet', text: 'Cargando la evolución…' })]);
+    var deltaTxt = it.delta === null || it.delta === undefined ? 'sin dato de hace 3 horas' : (it.delta === 0 ? 'sin cambios en 3 horas' : sgn(it.delta) + ' pts en 3 horas');
+    var lvl = el('section', { class: 'card pad-l ' + (STATE[it.label] || 's-sin'), 'aria-labelledby': 'h-nivel' }, [
+      el('div', { class: 'big-level' }, [
+        el('div', { style: 'display:flex;flex-direction:column;gap:6px' }, [
+          el('h2', { id: 'h-nivel', text: 'Nivel de respaldo de evidencia' }),
+          el('div', { class: 'big-num' }, [el('b', { text: String(it.level) }), el('span', { class: 'of', text: 'de ' + CAP }), el('span', { class: 'delta' + (it.delta < 0 ? ' down' : ''), text: deltaTxt })])
+        ]),
+        el('p', { text: 'Mide cuánta evidencia sólida e independiente hay hoy. No es la probabilidad de que sea cierto: es cuánto respaldo verificable tiene, y cada prueba tiene su enlace.' })
+      ]),
+      levelBar(it),
+      chartBox
+    ]);
+    if (it.videoAlert && it.alertText) {
+      lvl.appendChild(el('div', { class: 'callout', role: 'note' }, [el('b', { text: 'Alerta' }), it.alertText]));
+    }
+    main.appendChild(lvl);
+
+    // Evidencia reunida
+    var ev = el('div', { class: 'ev' });
     (it.evidence || []).forEach(function (e) {
       var line = (it.breakdown || []).filter(function (l) { return l.id === e.id; })[0];
       var value = line ? line.value : 0;
-      var li = el('li', null, [
-        el('div', null, [
-          el('span', { class: 'ev-type', text: TYPES[e.type] || e.type }), ': ',
-          e.label ? link(e.url, e.label) : (e.url ? link(e.url, e.url) : 'sin descripción')
+      var w = S.method && S.method.weights ? S.method.weights[e.type] : null;
+      var tone = !e.counted ? 's-sin' : (w >= 20 ? 's-confirmado' : w >= 14 ? 's-alto' : 's-medio');
+      ev.appendChild(el('div', null, [
+        el('div', { class: 'body' }, [
+          el('span', { class: 'name', text: TYPES[e.type] || e.type }),
+          el('span', { class: 'desc' }, [e.label ? link(e.url, e.label) : (e.url ? link(e.url, e.url) : 'sin descripción')]),
+          !e.counted ? el('span', { class: 'desc', text: 'No suma: otra prueba con el mismo origen ya cuenta (cada origen cuenta una sola vez).' }) : null
         ]),
-        el('span', { class: 'pts' + (value === 0 ? ' zero' : ''), text: value === 0 ? '0' : pts(value) })
-      ]);
-      if (!e.counted) li.appendChild(el('div', { class: 'ev-why', text: 'No suma: otra prueba con el mismo origen ya cuenta (cada origen cuenta una sola vez).' }));
-      ev.appendChild(li);
+        el('div', { class: 'side ' + tone }, [
+          el('span', { class: 'chip', text: w !== null && w !== undefined ? 'Peso ' + w : 'Prueba' }),
+          el('span', { class: 'eff', text: value === 0 ? '0' : sgn(value) })
+        ])
+      ]));
     });
-    (it.breakdown || []).filter(function (l) { return !l.id; }).forEach(function (l) {
-      ev.appendChild(el('li', null, [el('div', { text: l.label }), el('span', { class: 'pts', text: pts(l.value) })]));
-    });
-    a.appendChild(el('details', null, [
-      el('summary', { text: 'Cómo se calculó (' + plural((it.evidence || []).length, 'prueba', 'pruebas') + ')' }),
-      ev,
-      el('div', { class: 'total' }, [el('span', { text: 'Nivel de respaldo' }), el('span', { text: it.level + ' / ' + CAP })])
+    main.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Evidencia reunida' }),
+      el('p', { text: 'Cada prueba pesa según su calidad e independencia. Varios medios que repiten el mismo comunicado cuentan como una sola fuente.' }),
+      ev
     ]));
 
     // Cómo lo cubrió cada medio
     var groups = {}, order = [];
     (it.articles || []).forEach(function (n) { if (!groups[n.outlet]) { groups[n.outlet] = []; order.push(n.outlet); } groups[n.outlet].push(n); });
-    var det = el('details');
-    det.appendChild(el('summary', { text: 'Cómo lo cubrió cada medio (' + order.length + ')' }));
+    var cov = el('section', { class: 'card pad-l' }, [el('h2', { class: 'big', text: 'Cómo lo cubrió cada medio' })]);
     order.forEach(function (o) {
-      var s = sourcesByOutlet[o] || {};
+      var s = S.byOutlet[o] || {};
       var ul = el('ul');
       groups[o].forEach(function (n) {
-        var via = /(^|\.)news\.google\.com$/.test((function () { try { return new URL(n.url).hostname; } catch (_) { return ''; } })());
-        ul.appendChild(el('li', null, [link(n.url, n.title), via ? el('span', { class: 'via', text: ' · vía Google News' }) : null]));
+        ul.appendChild(el('li', null, [link(n.url, n.title), viaGoogle(n.url) ? el('span', { class: 'via', text: ' · vía Google News' }) : null]));
       });
-      det.appendChild(el('div', { class: 'outlet' }, [
-        el('h4', null, [o, s.owner ? el('span', { class: 'owner', text: s.owner }) : null]),
-        s.note ? el('div', { class: 'onote', text: s.note }) : null,
+      cov.appendChild(el('div', { class: 'outlet' }, [
+        el('h3', null, [o, s.owner ? el('span', { text: s.owner }) : null]),
+        s.note ? el('p', { style: 'font-size:13px;margin:2px 0 0', text: s.note }) : null,
         ul
       ]));
     });
-    a.appendChild(det);
-    return a;
+    main.appendChild(cov);
+    cols.appendChild(main);
+
+    // Lateral
+    var side = el('aside', { class: 'col-side' });
+    var brk = el('div', { class: 'brk' });
+    (it.breakdown || []).forEach(function (l) {
+      var ref = l.id ? (it.evidence || []).filter(function (e) { return e.id === l.id; })[0] : null;
+      var lab = TYPES[l.label] || l.label || (ref ? TYPES[ref.type] : '') || 'Ajuste';
+      brk.appendChild(el('div', null, [el('span', { text: lab }), el('span', { class: 'v' + (l.value < 0 ? ' neg' : ''), text: l.value === 0 ? '0' : sgn(l.value) })]));
+    });
+    brk.appendChild(el('div', { class: 'total' }, [el('span', { text: 'Total' }), el('span', { class: 'v', text: String(it.level) })]));
+    side.appendChild(el('div', { class: 'card' }, [el('h2', { text: 'Cómo se calculó el ' + it.level }), brk]));
+    side.appendChild(el('div', { class: 'card' }, [
+      el('h2', { text: 'Cobertura' }),
+      el('p', { text: plural(it.outlets, 'medio lo cubre', 'medios lo cubren') + ', de ' + plural(it.owners, 'grupo propietario', 'grupos propietarios') + '. ' + plural(it.officialSources, 'fuente oficial cargada', 'fuentes oficiales cargadas') + '.' })
+    ]));
+    side.appendChild(el('a', { class: 'linkcard', href: '#/comparador/' + encodeURIComponent(it.factId) }, [el('span', { text: 'Ver cómo lo cuenta cada medio' }), el('span', { 'aria-hidden': 'true', text: '→' })]));
+    side.appendChild(el('a', { class: 'linkcard', href: '#/metodologia' }, [el('span', { text: 'Cómo se calcula el nivel' }), el('span', { 'aria-hidden': 'true', text: '→' })]));
+    cols.appendChild(side);
+    root.appendChild(cols);
+
+    // Gráfico: se pide el historial y se dibuja cuando llega (si seguimos en esta pantalla).
+    getJson('/api/history?factId=' + encodeURIComponent(id)).then(function (h) {
+      if (!document.body.contains(chartBox)) return;
+      if (!h.points.length) chartBox.replaceChildren(el('p', { class: 'quiet', text: 'Todavía no hay mediciones guardadas de este hecho.' }));
+      else drawChart(chartBox, h.points, Date.now());
+    }).catch(function () {
+      if (document.body.contains(chartBox)) chartBox.replaceChildren(el('p', { class: 'quiet', text: 'No se pudo cargar la evolución.' }));
+    });
+    return root;
   }
 
-  function renderList(data) {
-    var list = document.getElementById('list');
-    list.replaceChildren();
-    var stamp = document.getElementById('stamp');
-    if (data.generatedAt) {
-      var min = (Date.now() - Date.parse(data.generatedAt)) / 60000;
-      stamp.textContent = 'Actualizado ' + ago(data.generatedAt);
-      stamp.className = 'stamp' + (min > 20 ? ' stale' : '');
-      if (min > 20) stamp.textContent += ' · el proceso de lectura puede estar detenido';
-    } else { stamp.textContent = 'Sin datos todavía'; }
-
-    if (!data.items.length) {
-      list.appendChild(el('p', { class: 'state', text: 'Todavía no hay hechos con evidencia cargada para este país.' }));
+  /* ---------- pantalla: comparador de medios ---------- */
+  function viewComp(id) {
+    var items = S.top.items;
+    var it = (id && findItem(id)) || items[0];
+    var root = el('div', { class: 'stack' });
+    root.appendChild(el('div', { style: 'display:flex;flex-direction:column;gap:16px' }, [
+      el('h1', { class: 'page', text: '¿Cómo lo cuenta cada medio?' }),
+      el('p', { class: 'lead', text: 'Un mismo hecho, seis medios. En lugar de un puntaje único de objetividad, se muestran datos concretos y verificables: qué titulares publicó cada medio y de quién es.' })
+    ]));
+    if (!it) {
+      root.appendChild(el('p', { class: 'state', text: 'Todavía no hay hechos publicados para comparar.' }));
     } else {
-      data.items.forEach(function (it) { list.appendChild(card(it, data.generatedAt)); });
-    }
-    var p = document.getElementById('pending');
-    if (data.withoutEvidence > 0) {
-      p.hidden = false;
-      p.textContent = 'Además hay ' + plural(data.withoutEvidence, 'tema con cobertura', 'temas con cobertura') +
-        ' sin evidencia cargada todavía. No se publican con un nivel inventado.';
-    } else { p.hidden = true; }
-    var rev = document.getElementById('rev'), rl = document.getElementById('revlist');
-    rl.replaceChildren();
-    (data.pendingReview || []).forEach(function (r) {
-      rl.appendChild(el('li', null, [r.title, el('div', { class: 'm', text: 'Nivel de respaldo calculado: ' + r.level + ' de ' + CAP + ' (' + r.label + ')' })]));
-    });
-    rev.hidden = !(data.pendingReview || []).length;
-    var cand = document.getElementById('cand'), cl = document.getElementById('candlist');
-    cl.replaceChildren();
-    (data.candidates || []).forEach(function (c) {
-      cl.appendChild(el('li', null, [c.title, el('div', { class: 'm', text: plural(c.outlets, 'medio', 'medios') + ': ' + (c.medios || []).join(', ') })]));
-    });
-    cand.hidden = !(data.candidates || []).length;
-  }
+      var sel = el('select', { id: 'tema' });
+      items.forEach(function (x) { var o = el('option', { value: x.factId, text: x.title }); if (x.factId === it.factId) o.selected = true; sel.appendChild(o); });
+      sel.addEventListener('change', function () { location.hash = '#/comparador/' + encodeURIComponent(sel.value); });
+      root.appendChild(el('div', { class: 'picker' }, [el('label', { for: 'tema', text: 'Hecho a comparar' }), sel]));
 
-  function renderSources(list) {
-    var body = document.getElementById('srcbody');
-    body.replaceChildren();
-    list.forEach(function (s) {
-      sourcesByOutlet[s.outlet] = s;
-      body.appendChild(el('tr', null, [
+      var grid = el('div', { class: 'grid2' });
+      S.sources.forEach(function (s) {
+        var arts = (it.articles || []).filter(function (a) { return a.outlet === s.outlet; });
+        var head = arts[0];
+        var card = el('article', { class: 'ocard' }, [
+          el('div', { class: 'nm' }, [el('span', { text: s.outlet }), el('span', { class: arts.length ? 'yes' : 'no', text: arts.length ? 'Lo cubrió' : 'Sin nota encontrada' })]),
+          head ? el('div', { class: 'hl' }, [link(head.url, head.title)]) : el('div', { class: 'hl none', text: 'No se encontró una nota sobre este hecho en las últimas 24 horas. Puede deberse a que el medio no lo cubrió o a que el lector no la vio.' })
+        ]);
+        if (arts.length > 1) {
+          var ul = el('ul');
+          arts.slice(1).forEach(function (a) { ul.appendChild(el('li', null, [link(a.url, a.title)])); });
+          card.appendChild(ul);
+        }
+        card.appendChild(el('dl', null, [
+          el('dt', { text: 'Propietario' }), el('dd', { text: s.owner }),
+          el('dt', { text: 'Tipo de medio' }), el('dd', { text: s.tipo || '—' }),
+          el('dt', { text: 'Cómo se lee' }), el('dd', { text: METHODS[s.method] || s.method })
+        ]));
+        grid.appendChild(card);
+      });
+      root.appendChild(grid);
+    }
+
+    // Matriz: qué hechos cubrió cada medio
+    if (items.length) {
+      var cols = S.sources.length;
+      var mx = el('div', { class: 'matrix', style: 'grid-template-columns:minmax(220px,1.8fr) repeat(' + cols + ',minmax(84px,1fr))' });
+      mx.appendChild(el('div', { class: 'h f', text: 'Hecho' }));
+      S.sources.forEach(function (s) { mx.appendChild(el('div', { class: 'h', text: s.outlet })); });
+      items.forEach(function (x) {
+        mx.appendChild(el('div', { class: 'f' }, [el('a', { href: '#/comparador/' + encodeURIComponent(x.factId), text: x.title })]));
+        S.sources.forEach(function (s) {
+          var has = (x.articles || []).some(function (a) { return a.outlet === s.outlet; });
+          mx.appendChild(el('div', null, [el('span', { class: has ? 'yes' : 'no', text: has ? 'Cubrió' : 'Sin nota' })]));
+        });
+      });
+      root.appendChild(el('section', { class: 'card pad-l' }, [
+        el('h2', { class: 'big', text: 'Qué hechos cubrió cada medio' }),
+        el('p', { text: '“Sin nota” significa que no se encontró una nota en las últimas 24 horas con el lector actual; no prueba que el medio lo haya omitido.' }),
+        el('div', { class: 'scroll' }, [mx])
+      ]));
+    }
+
+    // Por qué estos medios
+    var tb = el('tbody');
+    S.sources.forEach(function (s) {
+      tb.appendChild(el('tr', null, [
         el('td', { 'data-label': 'Medio' }, [el('strong', { text: s.outlet })]),
+        el('td', { 'data-label': 'Tipo de medio', text: s.tipo || '—' }),
         el('td', { 'data-label': 'Propiedad' }, [
           el('strong', { text: s.owner }),
           s.ownership ? el('div', { class: 'own', text: s.ownership }) : null,
-          el('div', { class: 'own' }, [
-            'Dato de: ' + (s.ownershipAsOf || 'sin fecha') + (s.ownershipSources && s.ownershipSources.length ? ' · Fuentes: ' : ''),
-            ].concat((s.ownershipSources || []).reduce(function (acc, f, i) { if (i) acc.push(' · '); acc.push(link(f.url, f.label)); return acc; }, [])))
+          el('div', { class: 'own' }, ['Dato de: ' + (s.ownershipAsOf || 'sin fecha') + ((s.ownershipSources || []).length ? ' · Fuentes: ' : '')]
+            .concat((s.ownershipSources || []).reduce(function (acc, f, i) { if (i) acc.push(' · '); acc.push(link(f.url, f.label)); return acc; }, [])))
         ]),
-        el('td', { 'data-label': 'Cómo se lee', text: METHODS[s.method] || s.method }),
-        el('td', { 'data-label': 'Aclaración de lectura', text: s.note || '—' })
+        el('td', { 'data-label': 'Cómo se lee' }, [METHODS[s.method] || s.method, s.note ? el('div', { class: 'own', text: s.note }) : null])
       ]));
     });
+    root.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Por qué estos medios' }),
+      el('p', { text: 'Se eligieron por tres criterios verificables: propiedad, tipo de medio y audiencia. No se les asigna una etiqueta ideológica. La propiedad cambia: cada dato indica su fecha y su fuente, y lo que no se pudo verificar figura como tal. Los datos de audiencia todavía no están cargados.' }),
+      el('div', { class: 'tablebox' }, [el('table', null, [
+        el('thead', null, [el('tr', null, ['Medio', 'Tipo de medio', 'Propiedad', 'Cómo se lee'].map(function (t) { return el('th', { text: t }); }))]),
+        tb
+      ])])
+    ]));
+
+    root.appendChild(el('section', { class: 'card info pad-l' }, [
+      el('h2', { text: 'Qué todavía no se mide' }),
+      el('p', { text: 'Fuentes citadas, datos verificables incluidos u omitidos, lenguaje cargado, distancia entre titular y cuerpo, y correcciones publicadas. Se van a mostrar cuando cada indicador tenga un método publicado y datos reales. Hasta entonces no aparecen valores inventados.' })
+    ]));
+    return root;
+  }
+
+  /* ---------- pantalla: metodología ---------- */
+  function viewMethod() {
+    var m = S.method, root = el('div', { class: 'stack', style: 'max-width:900px' });
+    root.appendChild(el('h1', { class: 'page', text: 'Metodología' }));
+    root.appendChild(el('p', { class: 'lead', text: 'Cómo se calcula el nivel de respaldo y cómo se ordena el Top 10. Los números salen del mismo motor que usa la página; son valores iniciales, todavía sin calibrar con casos reales.' }));
+    if (!m) { root.appendChild(el('p', { class: 'state', text: 'Cargando…' })); return root; }
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Qué mide el nivel de respaldo' }),
+      el('p', { text: 'Cuenta cuánta evidencia verificable hay detrás de un hecho, en una escala de 0 a ' + m.cap + '. No es la probabilidad de que sea cierto. El tope es ' + m.cap + ' porque ninguna evidencia deja un hecho en certeza absoluta.' }),
+      el('ul', null, [
+        el('li', { text: 'Las pruebas con el mismo origen se agrupan y cuentan una sola vez (la de mayor peso).' }),
+        el('li', { text: '“Confirmado” exige una fuente primaria o judicial más evidencia independiente.' }),
+        el('li', { text: 'Las contradicciones entre pruebas de peso medio o alto restan y pasan el hecho a “En disputa”.' }),
+        el('li', { text: 'La actividad coordinada en redes resta; no suma.' }),
+        el('li', { text: 'Los temas sensibles y los hechos “Confirmado” o “Desmentido” no se publican hasta que una persona los revise.' })
+      ])
+    ]));
+
+    var wb = el('tbody');
+    Object.keys(m.weights).sort(function (a, b) { return m.weights[b] - m.weights[a]; }).forEach(function (k) {
+      wb.appendChild(el('tr', null, [
+        el('td', { 'data-label': 'Tipo de prueba' }, [el('strong', { text: TYPES[k] || k })]),
+        el('td', { 'data-label': 'Peso', text: String(m.weights[k]) }),
+        el('td', { 'data-label': 'Qué cuenta', text: TYPE_DESC[k] || '' })
+      ]));
+    });
+    root.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Peso de cada prueba' }),
+      el('div', { class: 'tablebox' }, [el('table', null, [el('thead', null, [el('tr', null, ['Tipo de prueba', 'Peso', 'Qué cuenta'].map(function (t) { return el('th', { text: t }); }))]), wb])])
+    ]));
+
+    var legend = el('div', { class: 'legend' });
+    m.labels.forEach(function (l) { legend.appendChild(el('div', null, [chip(l.name), el('span', { class: 'r', text: l.min + '–' + l.max + ' puntos' })])); });
+    legend.appendChild(el('div', null, [chip('En disputa'), el('span', { class: 'r', text: 'hay contradicción' })]));
+    legend.appendChild(el('div', null, [chip('Desmentido'), el('span', { class: 'r', text: 'lo desmiente una fuente primaria' })]));
+    root.appendChild(el('section', { class: 'card pad-l' }, [el('h2', { class: 'big', text: 'Etiquetas' }), legend]));
+
+    var pc = function (x) { return Math.round(x * 100) + '%'; };
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Cómo se ordena el Top 10' }),
+      el('p', { text: 'Se toman las notas de las últimas ' + m.windowHours + ' horas, se agrupan las que hablan del mismo tema por similitud de titulares, y cada tema recibe un puntaje:' }),
+      el('ul', null, [
+        el('li', { text: 'Cobertura (' + pc(m.ranking.coverage) + '): cuántos medios distintos lo publicaron; el máximo se alcanza con ' + m.coverageFull + '.' }),
+        el('li', { text: 'Diversidad (' + pc(m.ranking.diversity) + '): cuántos grupos propietarios distintos; el máximo se alcanza con ' + m.diversityFull + '.' }),
+        el('li', { text: 'Velocidad (' + pc(m.ranking.velocity) + '): cuántas notas aparecieron en las últimas horas.' })
+      ]),
+      el('p', { text: 'Solo se publican los temas que tienen evidencia cargada: nunca se muestra un nivel inventado para el resto.' })
+    ]));
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Límites de esta etapa' }),
+      el('ul', null, [
+        el('li', { text: 'Todavía no se verifican videos: ninguna prueba es un video con fecha y lugar confirmados.' }),
+        el('li', { text: 'La evidencia se carga a mano y cada hecho se revisa antes de publicarse; no es una verificación automática.' }),
+        el('li', { text: 'Un medio “independiente” significa que no hay un vínculo conocido entre sus notas; no siempre se pudo comprobar que tenga fuente propia.' }),
+        el('li', { text: 'Algunos medios se leen a través de Google News: pueden aparecer menos notas que en el sitio real.' })
+      ])
+    ]));
+    return root;
+  }
+
+  /* ---------- enrutado y carga ---------- */
+  function route() {
+    var h = (location.hash || '#/').replace(/^#/, '');
+    var parts = h.split('/').filter(Boolean).map(function (p) { try { return decodeURIComponent(p); } catch (_) { return p; } });
+    if (parts[0] === 'hecho' && parts[1]) return { k: 'home', name: 'hecho', id: parts[1] };
+    if (parts[0] === 'comparador') return { k: 'comp', name: 'comp', id: parts[1] || '' };
+    if (parts[0] === 'metodologia') return { k: 'met', name: 'met' };
+    return { k: 'home', name: 'home' };
+  }
+  function updateStamp() {
+    var stamp = document.getElementById('stamp');
+    if (!stamp || !S.top) return;
+    if (S.top.generatedAt) {
+      var min = (Date.now() - Date.parse(S.top.generatedAt)) / 60000;
+      stamp.textContent = 'Actualizado ' + ago(S.top.generatedAt) + (min > 20 ? ' · el proceso de lectura puede estar detenido' : '');
+      stamp.className = 'stamp' + (min > 20 ? ' stale' : '');
+    } else { stamp.textContent = 'Sin datos todavía'; }
+  }
+  function render(force) {
+    var r = route();
+    var key = r.name + ':' + (r.id || '');
+    var gen = S.top ? S.top.generatedAt : null;
+    if (!force && key === drawn.key && gen === drawn.gen) { updateStamp(); return; }
+    var view = document.getElementById('view');
+    Array.prototype.forEach.call(document.querySelectorAll('#menu a'), function (a) {
+      if (a.getAttribute('data-k') === r.k) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    if (S.err && !S.top) { view.replaceChildren(el('p', { class: 'state err', role: 'alert', text: 'No se pudo cargar: ' + S.err })); return; }
+    if (!S.top) { return; }
+    var y = key === drawn.key ? window.scrollY : 0;
+    document.title = ({ home: 'Verificador de noticias · Argentina', hecho: 'Hecho · Verificador de noticias', comp: 'Comparador de medios · Verificador de noticias', met: 'Metodología · Verificador de noticias' })[r.name];
+    var node = r.name === 'hecho' ? viewFact(r.id) : r.name === 'comp' ? viewComp(r.id) : r.name === 'met' ? viewMethod() : viewHome();
+    view.replaceChildren(node);
+    updateStamp();
+    window.scrollTo(0, y);
+    drawn.key = key; drawn.gen = gen;
   }
 
   function getJson(url) {
@@ -327,26 +734,26 @@
       return r.json();
     });
   }
-  function fail(e) {
-    var list = document.getElementById('list');
-    if (!list.children.length || list.querySelector('.state:not(.err)')) {
-      list.replaceChildren(el('p', { class: 'state err', role: 'alert', text: 'No se pudo cargar: ' + (e && e.message ? e.message : e) }));
-    }
-    document.getElementById('stamp').textContent = 'Sin conexión';
-  }
 
   var first = true;
   function refresh() {
     var jobs = [getJson('/api/top?country=AR')];
-    if (first) jobs.push(getJson('/api/sources'));
+    if (first) { jobs.push(getJson('/api/sources')); jobs.push(getJson('/api/method')); }
     Promise.all(jobs).then(function (res) {
-      if (first) { renderSources(res[1].sources); first = false; }
-      // Se conservan abiertos los desplegables al refrescar.
-      var open = Array.prototype.map.call(document.querySelectorAll('#list details'), function (d) { return d.open; });
-      renderList(res[0]);
-      Array.prototype.forEach.call(document.querySelectorAll('#list details'), function (d, i) { if (open[i]) d.open = true; });
-    }).catch(fail);
+      S.top = res[0]; S.err = null;
+      if (first) {
+        S.sources = res[1].sources; S.method = res[2];
+        S.sources.forEach(function (s) { S.byOutlet[s.outlet] = s; });
+        first = false;
+      }
+      render(false);
+    }).catch(function (e) {
+      S.err = e && e.message ? e.message : String(e);
+      if (!S.top) render(true);
+      else { var st = document.getElementById('stamp'); if (st) { st.textContent = 'Sin conexión'; st.className = 'stamp stale'; } }
+    });
   }
+  window.addEventListener('hashchange', function () { render(true); window.scrollTo(0, 0); });
   refresh();
   setInterval(refresh, 60000);
 })();

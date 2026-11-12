@@ -48,6 +48,12 @@ export function createMemoryRepo() {
       }
       return out;
     },
+    async levelHistory(factId, sinceIso) {
+      return history
+        .filter((h) => h.factId === factId && Date.parse(h.at) >= Date.parse(sinceIso))
+        .sort((a, b) => Date.parse(a.at) - Date.parse(b.at))
+        .map((h) => ({ at: h.at, level: h.level }));
+    },
     async recordLevels(rows) {
       for (const r of rows) {
         if (!history.some((h) => h.factId === r.factId && h.at === iso(r.at))) {

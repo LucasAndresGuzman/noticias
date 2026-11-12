@@ -25,7 +25,8 @@
         "label": "Al Jazeera, 6/10/2026",
         "url": "https://www.aljazeera.com/economy/2026/10/6/cnn-cbs-news-now-under-one-roof-as-paramount-warner-bros-merger-closes"
       }
-    ]
+    ],
+    "tipo": "Canal internacional de noticias en español"
   },
   {
     "outlet": "LN+",
@@ -41,7 +42,8 @@
         "label": "La Nación: misión y estructura empresarial",
         "url": "https://www.lanacion.com.ar/sociedad/la-nacion-mision-estructura-empresarial-nid2406439/"
       }
-    ]
+    ],
+    "tipo": "Televisión de noticias, Argentina"
   },
   {
     "outlet": "C5N",
@@ -60,7 +62,8 @@
         "label": "La Nación, 26/5/2025",
         "url": "https://www.lanacion.com.ar/economia/cristobal-lopez-toma-el-control-de-c5n-y-de-souza-se-encargara-de-otros-negocios-nid26052025/"
       }
-    ]
+    ],
+    "tipo": "Televisión de noticias, Argentina"
   },
   {
     "outlet": "A24",
@@ -84,7 +87,8 @@
         "label": "iProfesional, 25/10/2025",
         "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
       }
-    ]
+    ],
+    "tipo": "Televisión de noticias, Argentina"
   },
   {
     "outlet": "Telefe",
@@ -108,7 +112,8 @@
         "label": "iProfesional, 25/10/2025",
         "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
       }
-    ]
+    ],
+    "tipo": "Televisión abierta, Argentina"
   },
   {
     "outlet": "BBC",
@@ -131,6 +136,7 @@
         "label": "National Audit Office, nov. 2022",
         "url": "https://www.nao.org.uk/wp-content/uploads/2022/11/departmental-overview-the-bbc-group-2021-22.pdf"
       }
-    ]
+    ],
+    "tipo": "Medio público, Reino Unido"
   }
 ]
