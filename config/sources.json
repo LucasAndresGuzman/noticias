@@ -25,22 +25,22 @@
     "outlet": "C5N",
     "owner": "Grupo Indalo",
     "country": "AR",
-    "feedUrl": "",
-    "nota": "Pendiente. El sitio enlaza https://www.c5n.com/contenidos/rss.html (sin verificar); falta la dirección directa del feed. Términos: https://www.c5n.com/terminos-y-condiciones"
+    "feedUrl": "https://news.google.com/rss/search?q=when:24h+site:c5n.com&hl=es-419&gl=AR&ceid=AR:es-419",
+    "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por c5n.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla."
   },
   {
     "outlet": "A24",
     "owner": "Grupo América",
     "country": "AR",
-    "feedUrl": "",
-    "nota": "Pendiente. No se encontró RSS público en https://www.a24.com. Términos: https://www.a24.com/terminos"
+    "feedUrl": "https://news.google.com/rss/search?q=when:24h+site:a24.com&hl=es-419&gl=AR&ceid=AR:es-419",
+    "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por a24.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla."
   },
   {
     "outlet": "Telefe",
     "owner": "Grupo Scaglione",
     "country": "AR",
-    "feedUrl": "",
-    "nota": "Pendiente. No se encontró RSS público en https://www.mitelefe.com. Términos: https://www.mitelefe.com/legales/terminos-de-uso. Verificar el grupo propietario vigente."
+    "feedUrl": "https://news.google.com/rss/search?q=when:24h+site:mitelefe.com&hl=es-419&gl=AR&ceid=AR:es-419",
+    "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por mitelefe.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla. Incluye todo el sitio, no solo noticias: puede traer notas de espectáculos. Verificar el grupo propietario vigente."
   },
   {
     "outlet": "BBC",
