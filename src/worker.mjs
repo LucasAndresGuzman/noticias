@@ -37,7 +37,7 @@ async function main() {
     run: async () => {
       await syncFacts(repo);
       const r = await runOnce({ repo, sources });
-      console.log(JSON.stringify({ at: r.generatedAt, nuevas: r.ingest.fresh, publicadas: r.published, errores: r.ingest.errors }));
+      console.log(JSON.stringify({ at: r.generatedAt, nuevas: r.ingest.fresh, publicadas: r.published, errores: r.ingest.errors, videos: r.ingest.videos }));
     }
   });
 }

@@ -1,8 +1,10 @@
 import { buildTop } from './engine/pipeline.mjs';
 import { cleanTitle, ingestSources, isHeadline } from './ingest.mjs';
+import { attachVideos, ingestVideos } from './videos.mjs';
 
 export const WINDOW_MS = 24 * 3600e3;
 export const PREVIOUS_MS = 3 * 3600e3;
+export const VIDEO_WINDOW_MS = 48 * 3600e3; // un video puede salir antes o después de la nota
 export const KEEP_MS = 7 * 24 * 3600e3;
 export const SNAPSHOT_KEEP_MS = 24 * 3600e3; // cada foto incluye notas y enlaces: se guardan solo las de un día
 
@@ -10,6 +12,7 @@ export const SNAPSHOT_KEEP_MS = 24 * 3600e3; // cada foto incluye notas y enlace
 export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date() }) {
   const nowIso = now.toISOString();
   const ingest = await ingestSources({ sources, fetchFn, repo, now });
+  ingest.videos = await ingestVideos({ sources, fetchFn, repo, now });
 
   // Se limpian los títulos también al leerlos: las notas viejas guardadas con sufijo no se corrigen solas.
   const byOutlet = Object.fromEntries(sources.map((s) => [s.outlet, s]));
@@ -25,6 +28,7 @@ export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date()
   const previous = await repo.levelsAt(new Date(now - PREVIOUS_MS).toISOString());
 
   const { top, pendingReview, noEvidence } = buildTop(articles, facts, previous, nowIso);
+  attachVideos(top, await repo.listVideosSince(new Date(now - VIDEO_WINDOW_MS).toISOString()));
 
   const levels = Object.values(top).flat().map((r) => ({ factId: r.factId, at: nowIso, level: r.level }));
   await repo.recordLevels(levels);

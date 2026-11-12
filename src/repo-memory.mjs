@@ -5,6 +5,7 @@ const iso = (d) => new Date(d).toISOString();
 export function createMemoryRepo() {
   const articles = new Map();
   const facts = new Map();
+  const videos = new Map();
   const history = []; // { factId, at, level }
   const snapshots = []; // { generatedAt, payload }
 
@@ -25,6 +26,21 @@ export function createMemoryRepo() {
       return [...articles.values()]
         .filter((a) => Date.parse(a.publishedAt) >= Date.parse(sinceIso))
         .sort((a, b) => Date.parse(a.publishedAt) - Date.parse(b.publishedAt));
+    },
+    async upsertVideos(list) {
+      let added = 0;
+      for (const v of list) {
+        if (!videos.has(v.id)) {
+          videos.set(v.id, { ...v, publishedAt: iso(v.publishedAt) });
+          added++;
+        } else videos.get(v.id).title = v.title;
+      }
+      return added;
+    },
+    async listVideosSince(sinceIso) {
+      return [...videos.values()]
+        .filter((v) => Date.parse(v.publishedAt) >= Date.parse(sinceIso))
+        .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
     },
     async upsertFact(f) {
       facts.set(f.id, {
@@ -72,6 +88,7 @@ export function createMemoryRepo() {
       const ts = Date.parse(snapshotsBeforeIso);
       for (let i = snapshots.length - 1; i >= 0; i--) if (Date.parse(snapshots[i].generatedAt) < ts && snapshots.length > 1) snapshots.splice(i, 1);
       for (const [id, a] of articles) if (Date.parse(a.publishedAt) < t) articles.delete(id);
+      for (const [id, v] of videos) if (Date.parse(v.publishedAt) < t) videos.delete(id);
     },
     async close() {}
   };

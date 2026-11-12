@@ -36,6 +36,29 @@ export function createPgRepo(pool) {
       }));
     },
 
+    async upsertVideos(list) {
+      let added = 0;
+      for (const v of list) {
+        const r = await pool.query(
+          `insert into videos (id, outlet, title, published_at, url) values ($1, $2, $3, $4, $5)
+           on conflict (id) do update set title = excluded.title
+             where videos.title is distinct from excluded.title
+           returning (xmax = 0) as inserted`,
+          [v.id, v.outlet, v.title, iso(v.publishedAt), v.url]
+        );
+        if (r.rows[0]?.inserted) added++;
+      }
+      return added;
+    },
+
+    async listVideosSince(sinceIso) {
+      const { rows } = await pool.query(
+        `select id, outlet, title, published_at, url from videos where published_at >= $1 order by published_at desc`,
+        [sinceIso]
+      );
+      return rows.map((r) => ({ id: r.id, outlet: r.outlet, title: r.title, publishedAt: iso(r.published_at), url: r.url }));
+    },
+
     async upsertFact(f) {
       await pool.query(
         `insert into facts (id, article_ids, category, evidence, contradictions, flags, alerts, note, updated_at)
@@ -108,6 +131,7 @@ export function createPgRepo(pool) {
       await pool.query(`delete from snapshots where generated_at < $1`, [snapshotsBeforeIso]);
       await pool.query(`delete from level_history where at < $1`, [beforeIso]);
       await pool.query(`delete from articles where published_at < $1`, [beforeIso]);
+      await pool.query(`delete from videos where published_at < $1`, [beforeIso]);
     },
 
     async close() {

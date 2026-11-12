@@ -154,6 +154,16 @@
   .outlet li { margin: 3px 0; }
   .via { font-size: 12px; color: var(--subtle); }
 
+  .vid { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--card); display: flex; flex-direction: column; }
+  .vstage { aspect-ratio: 16 / 9; background: #1f2937; color: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 16px; text-align: center; }
+  .vstage iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .vstage .vh { font-size: 14px; line-height: 1.4; max-width: 520px; }
+  .vbtn { min-height: 44px; padding: 0 20px; border-radius: 8px; border: 0; background: #f9fafb; color: #111827; font: 600 15px var(--sans); cursor: pointer; }
+  .vinfo { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.45; }
+  .vinfo .vt { font-size: 15px; font-weight: 600; }
+  .vinfo .vm { color: var(--muted); }
+  .vgrid { display: flex; flex-wrap: wrap; gap: 20px; }
+  .vgrid > .vid { flex: 1 1 340px; min-width: 0; }
   .picker { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
   .picker label { font-size: 14px; font-weight: 600; }
   select { min-height: 44px; min-width: 300px; max-width: 100%; padding: 0 14px; border: 1px solid var(--subtle); border-radius: 8px; background: var(--card); color: var(--ink); font: 400 15px var(--sans); }
@@ -304,6 +314,35 @@
     ]);
   }
 
+  var VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
+  // Reproductor de YouTube sin cookies: no se carga nada de YouTube hasta que la persona lo pide.
+  function videoCard(v) {
+    if (!VIDEO_ID.test(v.videoId || '')) return null;
+    var s = S.byOutlet[v.outlet] || {};
+    var watch = 'https://www.youtube.com/watch?v=' + v.videoId;
+    var btn = el('button', { type: 'button', class: 'vbtn', text: 'Reproducir acá' });
+    var stage = el('div', { class: 'vstage' }, [el('div', { class: 'vh', text: v.title }), btn]);
+    btn.addEventListener('click', function () {
+      stage.replaceChildren(el('iframe', {
+        src: 'https://www.youtube-nocookie.com/embed/' + v.videoId + '?rel=0&autoplay=1',
+        title: 'Video de ' + v.outlet + ': ' + v.title,
+        allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen',
+        allowfullscreen: '',
+        referrerpolicy: 'strict-origin-when-cross-origin'
+      }));
+    });
+    return el('div', { class: 'vid' }, [
+      stage,
+      el('div', { class: 'vinfo' }, [
+        el('div', { class: 'vt', text: v.title }),
+        el('div', { class: 'vm', text: 'Publicado por ' + v.outlet + (s.owner ? ' (' + s.owner + ')' : '') + ' en su canal de YouTube · ' + ago(v.publishedAt) }),
+        el('div', null, [el('a', { href: watch, target: '_blank', rel: 'noopener noreferrer', text: 'Ver el video en YouTube, publicado por ' + v.outlet })]),
+        el('div', { class: 'vm', text: 'Sin verificar: se asoció a este hecho por la similitud del titular. No se confirmó la fecha, el lugar ni el origen de las imágenes.' })
+      ])
+    ]);
+  }
+  function outletsWithVideo() { return S.sources.filter(function (x) { return x.video; }).map(function (x) { return x.outlet; }); }
+
   /* ---------- pantalla: Noticias del día ---------- */
   function viewHome() {
     var d = S.top, root = el('div', { class: 'stack' });
@@ -384,8 +423,8 @@
       ]));
     }
     side.appendChild(el('div', { class: 'card' }, [
-      el('h2', { text: 'Verificación de videos' }),
-      el('p', { text: 'Todavía no está disponible: ninguna prueba de esta etapa es un video con fecha y lugar confirmados.' })
+      el('h2', { text: 'Videos de los medios' }),
+      el('p', { text: 'En cada noticia se muestran los videos que publicó el medio en su canal de YouTube, con el enlace a quien lo publicó. Todavía no se verifica su fecha ni su origen: ninguna prueba de esta etapa es un video verificado.' })
     ]));
     side.appendChild(el('div', { class: 'card info' }, [
       el('h2', { text: '¿Cómo lo cuenta cada medio?' }),
@@ -487,6 +526,16 @@
       ev
     ]));
 
+    // Videos de los medios
+    var vsec = el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Videos de los medios' }),
+      el('p', { text: 'Videos que cada medio publicó en su canal de YouTube sobre este hecho. Se asocian por la similitud del titular y no están verificados: no se confirmó su fecha, su lugar ni su origen.' })
+    ]);
+    var vcards = (it.videos || []).map(videoCard).filter(Boolean);
+    if (vcards.length) vsec.appendChild(el('div', { class: 'vgrid' }, vcards));
+    else vsec.appendChild(el('p', { class: 'quiet', text: 'No se encontraron videos sobre este hecho. Hoy se leen los canales de: ' + (outletsWithVideo().join(', ') || 'ningún medio todavía') + '.' }));
+    main.appendChild(vsec);
+
     // Cómo lo cubrió cada medio
     var groups = {}, order = [];
     (it.articles || []).forEach(function (n) { if (!groups[n.outlet]) { groups[n.outlet] = []; order.push(n.outlet); } groups[n.outlet].push(n); });
@@ -566,6 +615,9 @@
           arts.slice(1).forEach(function (a) { ul.appendChild(el('li', null, [link(a.url, a.title)])); });
           card.appendChild(ul);
         }
+        var ovid = ((it && it.videos) || []).filter(function (v) { return v.outlet === s.outlet; }).map(videoCard).filter(Boolean);
+        ovid.forEach(function (c) { card.appendChild(c); });
+        if (!ovid.length) card.appendChild(el('p', { class: 'quiet', text: s.video ? 'No se encontró un video de este medio sobre el hecho.' : 'Todavía no se leen los videos de este medio.' }));
         card.appendChild(el('dl', null, [
           el('dt', { text: 'Propietario' }), el('dd', { text: s.owner }),
           el('dt', { text: 'Tipo de medio' }), el('dd', { text: s.tipo || '—' }),
@@ -680,7 +732,7 @@
     root.appendChild(el('section', { class: 'card pad-l prose' }, [
       el('h2', { class: 'big', text: 'Límites de esta etapa' }),
       el('ul', null, [
-        el('li', { text: 'Todavía no se verifican videos: ninguna prueba es un video con fecha y lugar confirmados.' }),
+        el('li', { text: 'Los videos que se muestran son los que cada medio publicó en su canal de YouTube, asociados al hecho por la similitud del titular. No se verifica su fecha, su lugar ni su origen, y no suman al nivel de respaldo.' }),
         el('li', { text: 'La evidencia se carga a mano y cada hecho se revisa antes de publicarse; no es una verificación automática.' }),
         el('li', { text: 'Un medio “independiente” significa que no hay un vínculo conocido entre sus notas; no siempre se pudo comprobar que tenga fuente propia.' }),
         el('li', { text: 'Algunos medios se leen a través de Google News: pueden aparecer menos notas que en el sitio real.' })

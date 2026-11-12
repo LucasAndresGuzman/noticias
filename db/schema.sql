@@ -40,3 +40,14 @@ create table if not exists snapshots (
   payload      jsonb not null
 );
 create index if not exists snapshots_generated_idx on snapshots (generated_at desc);
+
+-- Videos publicados por los canales de YouTube de los medios (id = ID del video).
+create table if not exists videos (
+  id           text primary key,
+  outlet       text not null,
+  title        text not null,
+  published_at timestamptz not null,
+  url          text not null,
+  fetched_at   timestamptz not null default now()
+);
+create index if not exists videos_published_idx on videos (published_at desc);

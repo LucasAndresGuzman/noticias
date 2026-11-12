@@ -33,7 +33,7 @@ const HTML_HEADERS = {
   'referrer-policy': 'no-referrer',
   'x-content-type-options': 'nosniff',
   'content-security-policy':
-    "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; frame-src https://www.youtube-nocookie.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 };
 
 /** Medios y cómo se leen, para mostrar en pantalla. No expone las direcciones de los feeds. */
@@ -45,6 +45,7 @@ export function describeSources(path = new URL('../config/sources.json', import.
       country: s.country,
       method: !s.feedUrl ? 'none' : /news\.google\.com/.test(s.feedUrl) ? 'google-news' : 'rss',
       tipo: s.tipo ?? '',
+      video: Boolean(s.youtube),
       note: s.notaPublica ?? '',
       ownership: s.propiedad ?? '',
       ownershipAsOf: s.propiedadAl ?? '',
