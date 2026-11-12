@@ -94,6 +94,8 @@ test('la API avisa qué medios tienen lector de videos y la página solo permite
   const headers = { authorization: 'Basic ' + Buffer.from('u:p').toString('base64') };
   const src = JSON.parse((await handleRequest({ method: 'GET', url: '/api/sources', headers }, { repo, env })).body).sources;
   assert.equal(src.find((s) => s.outlet === 'CNN en Español').video, true);
+  assert.equal(src.find((s) => s.outlet === 'LN+').video, true);
+  assert.match(src.find((s) => s.outlet === 'LN+').videoCanal, /La Nación/);
   assert.ok(!JSON.stringify(src).includes('UC_') && !JSON.stringify(src).includes('@cnnee'), 'no expone la referencia del canal');
   const page = await handleRequest({ method: 'GET', url: '/', headers }, { repo, env });
   assert.match(page.headers['content-security-policy'], /frame-src https:\/\/www\.youtube-nocookie\.com;/);

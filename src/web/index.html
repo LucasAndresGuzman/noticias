@@ -335,8 +335,8 @@
       stage,
       el('div', { class: 'vinfo' }, [
         el('div', { class: 'vt', text: v.title }),
-        el('div', { class: 'vm', text: 'Publicado por ' + v.outlet + (s.owner ? ' (' + s.owner + ')' : '') + ' en su canal de YouTube · ' + ago(v.publishedAt) }),
-        el('div', null, [el('a', { href: watch, target: '_blank', rel: 'noopener noreferrer', text: 'Ver el video en YouTube, publicado por ' + v.outlet })]),
+        el('div', { class: 'vm', text: 'Publicado en YouTube por el canal ' + (s.videoCanal || v.outlet) + (s.owner ? ' · propietario: ' + s.owner : '') + ' · ' + ago(v.publishedAt) }),
+        el('div', null, [el('a', { href: watch, target: '_blank', rel: 'noopener noreferrer', text: 'Ver el video en YouTube, publicado por ' + (s.videoCanal || v.outlet) })]),
         el('div', { class: 'vm', text: 'Sin verificar: se asoció a este hecho por la similitud del titular. No se confirmó la fecha, el lugar ni el origen de las imágenes.' })
       ])
     ]);

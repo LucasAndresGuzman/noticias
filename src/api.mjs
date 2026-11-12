@@ -46,6 +46,7 @@ export function describeSources(path = new URL('../config/sources.json', import.
       method: !s.feedUrl ? 'none' : /news\.google\.com/.test(s.feedUrl) ? 'google-news' : 'rss',
       tipo: s.tipo ?? '',
       video: Boolean(s.youtube),
+      videoCanal: s.youtubeCanal ?? '',
       note: s.notaPublica ?? '',
       ownership: s.propiedad ?? '',
       ownershipAsOf: s.propiedadAl ?? '',
