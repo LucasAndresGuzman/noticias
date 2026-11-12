@@ -64,7 +64,7 @@ test('país inválido, ruta inexistente, método no permitido y base vacía', as
   assert.equal((await handleRequest(get('/api/nada', auth), { repo, env: ENV })).status, 404);
   assert.equal((await handleRequest({ method: 'POST', url: '/api/top', headers: { authorization: auth } }, { repo, env: ENV })).status, 405);
   const vacio = JSON.parse((await handleRequest(get('/api/top', auth), { repo, env: ENV })).body);
-  assert.deepEqual(vacio, { country: 'AR', generatedAt: null, items: [], withoutEvidence: 0 });
+  assert.deepEqual(vacio, { country: 'AR', generatedAt: null, items: [], withoutEvidence: 0, candidates: [] });
 });
 
 test('/api/health no pide contraseña y no expone datos', async () => {

@@ -76,7 +76,12 @@ export async function handleRequest(req, { repo, env = process.env }) {
       country,
       generatedAt: snap?.generatedAt ?? null,
       items: snap?.payload.top?.[country] ?? [],
-      withoutEvidence: (snap?.payload.noEvidence ?? []).filter((x) => x.country === country).length
+      withoutEvidence: (snap?.payload.noEvidence ?? []).filter((x) => x.country === country).length,
+      // Temas con más cobertura que esperan evidencia (para saber qué cargar primero).
+      candidates: (snap?.payload.noEvidence ?? [])
+        .filter((x) => x.country === country && x.sample)
+        .slice(0, 10)
+        .map((x) => ({ title: x.title, outlets: x.outlets, medios: x.sample.map((m) => m.outlet) }))
     });
   }
 

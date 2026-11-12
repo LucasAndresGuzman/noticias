@@ -46,6 +46,8 @@ test('/api/top entrega las pruebas con su fuente, las notas por medio y cuántos
   const body = JSON.parse((await handleRequest(get('/api/top?country=AR', auth), { repo, env: ENV })).body);
   assert.equal(body.items.length, 1);
   assert.equal(body.withoutEvidence, 1);
+  assert.equal(body.candidates[0].title, 'Un tema sin evidencia cargada todavía');
+  assert.deepEqual(body.candidates[0].medios, ['A24']);
   const it = body.items[0];
   assert.ok(it.evidence.length >= 3 && it.evidence.every((e) => e.label && e.url));
   const e1 = it.evidence.find((e) => e.id === 'e1');

@@ -2,6 +2,7 @@
 import { cluster, rank } from './ranking.mjs';
 import { score } from './scoring.mjs';
 
+export const CANDIDATES_DETAILED = 30;
 const OFFICIAL_TYPES = new Set(['official_statement', 'judicial_resolution']);
 const INDEPENDENT_TYPES = new Set(['independent_outlets', 'verified_video', 'judicial_resolution']);
 
@@ -46,7 +47,20 @@ export function buildTop(articles, facts, previous, now) {
       const fact = facts.find((f) => f.articleIds.some((id) => row.members.includes(id)));
       if (!fact) {
         // Hay cobertura pero nadie cargó evidencia: no se publica un nivel inventado.
-        noEvidence.push({ country, title: row.title, outlets: row.outlets });
+        // Se guardan detalles solo de los candidatos más cubiertos (la lista ya viene ordenada por relevancia).
+        const detailed = noEvidence.filter((x) => x.country === country).length < CANDIDATES_DETAILED;
+        const sample = [];
+        if (detailed) {
+          const seen = new Set();
+          for (const id of row.members) {
+            const a = articles.find((x) => x.id === id);
+            if (a && !seen.has(a.outlet)) {
+              seen.add(a.outlet);
+              sample.push({ id: a.id, outlet: a.outlet, title: a.title });
+            }
+          }
+        }
+        noEvidence.push({ country, title: row.title, outlets: row.outlets, ...(detailed ? { articleIds: row.members, sample } : {}) });
         continue;
       }
 

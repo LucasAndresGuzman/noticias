@@ -79,7 +79,8 @@
   .tablewrap { overflow-x: auto; }
   .limits { margin-top: 28px; font-size: 14px; color: var(--muted); }
   .limits li { margin: 4px 0; }
-  .pending { margin: 18px 0; font-size: 14.5px; color: var(--muted); }
+  .pending { margin: 18px 0 8px; font-size: 14.5px; color: var(--muted); }
+  .cand { margin: 0 0 8px; } .cand ol { margin: 6px 0 0; padding-left: 22px; font-size: 14px; } .cand li { margin: 5px 0; } .cand .m { color: var(--muted); font-size: 12.5px; }
   @media (max-width: 560px) {
     h1 { font-size: 23px; } .head h2 { font-size: 18px; } .pos { font-size: 24px; min-width: 28px; }
     article.fact { padding: 14px 12px 10px; }
@@ -111,6 +112,10 @@
 
   <main id="list"><p class="state">Cargando el Top 10…</p></main>
   <p class="pending" id="pending" hidden></p>
+  <details class="cand" id="cand" hidden>
+    <summary>Temas con más cobertura que esperan evidencia</summary>
+    <ol id="candlist"></ol>
+  </details>
 
   <section class="sources" aria-labelledby="src-h">
     <h3 id="src-h">Medios y cómo se leen</h3>
@@ -275,6 +280,12 @@
       p.textContent = 'Además hay ' + plural(data.withoutEvidence, 'tema con cobertura', 'temas con cobertura') +
         ' sin evidencia cargada todavía. No se publican con un nivel inventado.';
     } else { p.hidden = true; }
+    var cand = document.getElementById('cand'), cl = document.getElementById('candlist');
+    cl.replaceChildren();
+    (data.candidates || []).forEach(function (c) {
+      cl.appendChild(el('li', null, [c.title, el('div', { class: 'm', text: plural(c.outlets, 'medio', 'medios') + ': ' + (c.medios || []).join(', ') })]));
+    });
+    cand.hidden = !(data.candidates || []).length;
   }
 
   function renderSources(list) {
