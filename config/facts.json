@@ -96,7 +96,8 @@
       "93821f59ee5fdfbf"
     ],
     "flags": {
-      "sensitive": true
+      "sensitive": true,
+      "humanReviewed": true
     },
     "evidence": [
       {
@@ -114,6 +115,6 @@
         "url": "https://www.investing.com/news/world-news/iran-designates-argentinas-navy-and-air-force-as-terrorist-organizations-5017781"
       }
     ],
-    "note": "Tema sensible: acusación de terrorismo entre Estados, pendiente de revisión humana. No se pudo consultar el texto original de Irán ni el comunicado argentino completo; el hecho se conoce por Reuters y por la prensa argentina."
+    "note": "Tema sensible: acusación de terrorismo entre Estados. Aprobado para publicar por el responsable del proyecto el 12/11/2026. No se pudo consultar el texto original de Irán ni el comunicado argentino completo; el hecho se conoce por Reuters y por la prensa argentina."
   }
 ]

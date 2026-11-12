@@ -88,7 +88,8 @@
         "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
       }
     ],
-    "tipo": "Televisión de noticias, Argentina"
+    "tipo": "Televisión de noticias, Argentina",
+    "grupoDiversidad": "Socios comunes de Grupo América y Telefe"
   },
   {
     "outlet": "Telefe",
@@ -113,7 +114,8 @@
         "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
       }
     ],
-    "tipo": "Televisión abierta, Argentina"
+    "tipo": "Televisión abierta, Argentina",
+    "grupoDiversidad": "Socios comunes de Grupo América y Telefe"
   },
   {
     "outlet": "BBC",

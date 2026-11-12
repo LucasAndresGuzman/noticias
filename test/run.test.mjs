@@ -215,11 +215,24 @@ test('hecho sensible: queda pendiente de revisión humana y recién se publica a
     const r = await runOnce({ repo, sources: [], now: new Date('2026-11-11T12:00:00Z') });
     return r;
   };
-  const sinRevisar = await run(f);
+  const sinRevisar = await run({ ...f, flags: { sensitive: true } });
   assert.equal(sinRevisar.published, 0);
   assert.equal(sinRevisar.pendingReview, 1);
-  const revisado = await run({ ...f, flags: { ...f.flags, humanReviewed: true } });
+  const revisado = await run({ ...f, flags: { sensitive: true, humanReviewed: true } });
   assert.equal(revisado.published, 1);
+  assert.equal(f.flags.humanReviewed, true, 'el responsable del proyecto aprobó este hecho el 12/11/2026');
+});
+
+test('medios con socios en común (A24 y Telefe) cuentan como un solo grupo en la diversidad', async () => {
+  const repo = createMemoryRepo();
+  const mk = (id, outlet) => ({ id, outlet, owner: 'x', title: 'Milei despidió al Papa en el aeropuerto de Ezeiza', publishedAt: '2026-11-04T11:00:00Z', country: 'AR', url: `https://x.invalid/${id}` });
+  await repo.upsertArticles([mk('g1', 'A24'), mk('g2', 'Telefe'), mk('g3', 'C5N')]);
+  await repo.upsertFact({ id: 'f', articleIds: ['g1'], evidence: [{ id: 'e1', type: 'single_source' }] });
+  const sources = loadSources().filter((s) => ['A24', 'Telefe', 'C5N'].includes(s.outlet));
+  await runOnce({ repo, sources: sources.map((s) => ({ ...s, feedUrl: undefined })), now: NOWD });
+  const row = (await repo.latestSnapshot()).payload.top.AR[0];
+  assert.equal(row.outlets, 3);
+  assert.equal(row.owners, 2, 'A24 y Telefe comparten socios: un grupo; C5N otro');
 });
 
 test('runOnce usa el propietario vigente de la configuración y no el guardado en notas viejas', async () => {

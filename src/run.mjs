@@ -15,7 +15,11 @@ export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date()
   const byOutlet = Object.fromEntries(sources.map((s) => [s.outlet, s]));
   const articles = (await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString()))
     // El propietario se toma de la configuración vigente: las notas viejas guardan el que figuraba al leerlas.
-    .map((a) => ({ ...a, title: cleanTitle(byOutlet[a.outlet] ?? {}, a.title), owner: byOutlet[a.outlet]?.owner ?? a.owner }))
+    // Medios con socios en común (A24 y Telefe) comparten `grupoDiversidad`: cuentan como un solo grupo en la diversidad.
+    .map((a) => {
+      const s = byOutlet[a.outlet] ?? {};
+      return { ...a, title: cleanTitle(s, a.title), owner: s.grupoDiversidad ?? s.owner ?? a.owner };
+    })
     .filter((a) => isHeadline(a.title));
   const facts = await repo.listFacts();
   const previous = await repo.levelsAt(new Date(now - PREVIOUS_MS).toISOString());

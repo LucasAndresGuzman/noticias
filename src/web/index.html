@@ -671,7 +671,7 @@
       el('p', { text: 'Se toman las notas de las últimas ' + m.windowHours + ' horas, se agrupan las que hablan del mismo tema por similitud de titulares, y cada tema recibe un puntaje:' }),
       el('ul', null, [
         el('li', { text: 'Cobertura (' + pc(m.ranking.coverage) + '): cuántos medios distintos lo publicaron; el máximo se alcanza con ' + m.coverageFull + '.' }),
-        el('li', { text: 'Diversidad (' + pc(m.ranking.diversity) + '): cuántos grupos propietarios distintos; el máximo se alcanza con ' + m.diversityFull + '.' }),
+        el('li', { text: 'Diversidad (' + pc(m.ranking.diversity) + '): cuántos grupos propietarios distintos; el máximo se alcanza con ' + m.diversityFull + '. A24 y Telefe cuentan como un solo grupo porque comparten socios.' }),
         el('li', { text: 'Velocidad (' + pc(m.ranking.velocity) + '): cuántas notas aparecieron en las últimas horas.' })
       ]),
       el('p', { text: 'Solo se publican los temas que tienen evidencia cargada: nunca se muestra un nivel inventado para el resto.' })
