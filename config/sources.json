@@ -67,7 +67,9 @@
         "url": "https://www.lanacion.com.ar/economia/cristobal-lopez-toma-el-control-de-c5n-y-de-souza-se-encargara-de-otros-negocios-nid26052025/"
       }
     ],
-    "tipo": "Televisión de noticias, Argentina"
+    "tipo": "Televisión de noticias, Argentina",
+    "youtube": "@c5n",
+    "youtubeCanal": "C5N"
   },
   {
     "outlet": "A24",
@@ -93,7 +95,9 @@
       }
     ],
     "tipo": "Televisión de noticias, Argentina",
-    "grupoDiversidad": "Socios comunes de Grupo América y Telefe"
+    "grupoDiversidad": "Socios comunes de Grupo América y Telefe",
+    "youtube": "@A24com",
+    "youtubeCanal": "A24"
   },
   {
     "outlet": "Telefe",
@@ -119,7 +123,9 @@
       }
     ],
     "tipo": "Televisión abierta, Argentina",
-    "grupoDiversidad": "Socios comunes de Grupo América y Telefe"
+    "grupoDiversidad": "Socios comunes de Grupo América y Telefe",
+    "youtube": "@Telefenoticias",
+    "youtubeCanal": "Telefe Noticias"
   },
   {
     "outlet": "BBC",
@@ -143,6 +149,8 @@
         "url": "https://www.nao.org.uk/wp-content/uploads/2022/11/departmental-overview-the-bbc-group-2021-22.pdf"
       }
     ],
-    "tipo": "Medio público, Reino Unido"
+    "tipo": "Medio público, Reino Unido",
+    "youtube": "@BBCMundo",
+    "youtubeCanal": "BBC News Mundo"
   }
 ]
