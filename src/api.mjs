@@ -42,7 +42,10 @@ export function describeSources(path = new URL('../config/sources.json', import.
       owner: s.owner,
       country: s.country,
       method: !s.feedUrl ? 'none' : /news\.google\.com/.test(s.feedUrl) ? 'google-news' : 'rss',
-      note: s.notaPublica ?? ''
+      note: s.notaPublica ?? '',
+      ownership: s.propiedad ?? '',
+      ownershipAsOf: s.propiedadAl ?? '',
+      ownershipSources: (s.propiedadFuentes ?? []).filter((f) => /^https:\/\//.test(f.url))
     }));
   } catch {
     return [];

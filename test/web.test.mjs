@@ -62,8 +62,9 @@ test('/api/sources lista los 6 medios con su aclaración y sin exponer las direc
   const r = await handleRequest(get('/api/sources', auth), { repo, env: ENV });
   const { sources } = JSON.parse(r.body);
   assert.equal(sources.length, 6);
-  assert.ok(sources.every((s) => s.note && s.owner));
-  assert.ok(!r.body.includes('feedUrl') && !r.body.includes('http'));
+  assert.ok(sources.every((s) => s.note && s.owner && s.ownership && s.ownershipAsOf));
+  assert.ok(sources.every((s) => s.ownershipSources.length >= 1 && s.ownershipSources.every((f) => /^https:\/\//.test(f.url) && f.label)));
+  assert.ok(!r.body.includes('feedUrl') && !r.body.includes('news.google.com'));
   assert.equal(describeSources().find((s) => s.outlet === 'LN+').method, 'rss');
 });
 

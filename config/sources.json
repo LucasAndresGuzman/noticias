@@ -1,7 +1,7 @@
 [
   {
     "outlet": "CNN en Español",
-    "owner": "Warner Bros. Discovery",
+    "owner": "Skydance",
     "country": "AR",
     "feedUrl": "https://news.google.com/rss/search?q=when:24h+site:cnnespanol.cnn.com+Argentina&hl=es-419&gl=AR&ceid=AR:es-419",
     "mustMatch": [
@@ -13,15 +13,35 @@
     ],
     "nota": "CNN en Español no tiene RSS propio en funcionamiento (cnnespanol.cnn.com/feed/ da 404). Se leen sus titulares a través de un feed de Google News filtrado por el sitio y por la palabra Argentina. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla.",
     "stripTitleSuffix": " - CNN en Español",
-    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por el sitio y por la palabra Argentina. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real."
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por el sitio y por la palabra Argentina. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real.",
+    "propiedad": "Desde el 6 de octubre de 2026 pertenece a Skydance, la empresa surgida de la compra de Warner Bros. Discovery por Paramount Skydance, dirigida por David Ellison. Quedó en el mismo grupo que CBS News; el acuerdo prevé un consejo editorial para resguardar la independencia de CNN y CBS News.",
+    "propiedadAl": "6/10/2026",
+    "propiedadFuentes": [
+      {
+        "label": "CBS News, 6/10/2026",
+        "url": "https://www.cbsnews.com/news/paramount-warner-bros-discovery-deal-skydance/"
+      },
+      {
+        "label": "Al Jazeera, 6/10/2026",
+        "url": "https://www.aljazeera.com/economy/2026/10/6/cnn-cbs-news-now-under-one-roof-as-paramount-warner-bros-merger-closes"
+      }
+    ]
   },
   {
     "outlet": "LN+",
-    "owner": "Grupo La Nación",
+    "owner": "S.A. La Nación",
     "country": "AR",
     "feedUrl": "https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml",
     "nota": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal: debe mostrarse así en pantalla.",
-    "notaPublica": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal."
+    "notaPublica": "Se lee el RSS del diario La Nación, del mismo grupo que el canal LN+. No es el feed del canal.",
+    "propiedad": "Es la señal de televisión del diario La Nación, editado por S.A. LA NACION, empresa privada cuyo directorio preside Julio C. Saguier, según la propia empresa. Los accionistas y sus porcentajes no están verificados.",
+    "propiedadAl": "sin fecha de actualización verificada",
+    "propiedadFuentes": [
+      {
+        "label": "La Nación: misión y estructura empresarial",
+        "url": "https://www.lanacion.com.ar/sociedad/la-nacion-mision-estructura-empresarial-nid2406439/"
+      }
+    ]
   },
   {
     "outlet": "C5N",
@@ -32,7 +52,15 @@
     "stripTitleSuffix": [
       " - C5N"
     ],
-    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por c5n.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real. Datos de propiedad pendientes de actualizar."
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por c5n.com. Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio real.",
+    "propiedad": "Pertenece a Grupo Indalo. En mayo de 2025 Cristóbal López asumió la gestión de sus medios y, según La Nación, el capital se mantiene en 70% López y 30% Fabián De Sousa. No se encontraron cambios posteriores, pero el dato tiene casi 18 meses.",
+    "propiedadAl": "26/5/2025",
+    "propiedadFuentes": [
+      {
+        "label": "La Nación, 26/5/2025",
+        "url": "https://www.lanacion.com.ar/economia/cristobal-lopez-toma-el-control-de-c5n-y-de-souza-se-encargara-de-otros-negocios-nid26052025/"
+      }
+    ]
   },
   {
     "outlet": "A24",
@@ -44,23 +72,47 @@
       " - A24.com",
       " - A24"
     ],
-    "notaPublica": "Se leen sus titulares a través de Google News, limitados a las secciones Política, Economía, Mundo y Tecnología de a24.com, sin farándula ni espectáculos. Es un intermediario. Datos de propiedad pendientes de actualizar."
+    "notaPublica": "Se leen sus titulares a través de Google News, limitados a las secciones Política, Economía, Mundo y Tecnología de a24.com, sin farándula ni espectáculos. Es un intermediario.",
+    "propiedad": "Forma parte de Grupo América. Según la prensa, sus accionistas son Daniel Vila, José Luis Manzano, Claudio Belocopitt y Gustavo Scaglione. Los porcentajes no están verificados. Los mismos nombres figuran como socios de Telefe, aunque en sociedades separadas.",
+    "propiedadAl": "25/10/2025",
+    "propiedadFuentes": [
+      {
+        "label": "Infobae, 21/11/2024",
+        "url": "https://www.infobae.com/economia/2024/11/22/gustavo-scaglione-se-sumo-como-accionista-al-grupo-america/"
+      },
+      {
+        "label": "iProfesional, 25/10/2025",
+        "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
+      }
+    ]
   },
   {
     "outlet": "Telefe",
-    "owner": "Grupo Scaglione",
+    "owner": "Sociedad liderada por Gustavo Scaglione",
     "country": "AR",
     "feedUrl": "https://news.google.com/rss/search?q=when:24h+site:noticias.mitelefe.com&hl=es-419&gl=AR&ceid=AR:es-419",
-    "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla. Verificar el grupo propietario vigente.",
+    "nota": "Sin RSS propio: se leen sus titulares a través de un feed de Google News filtrado por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario: los enlaces pasan por Google y puede haber menos notas que en el sitio. Debe mostrarse así en pantalla.",
     "stripTitleSuffix": [
       " - Telefe"
     ],
     "stripTitlePattern": "\\s+-\\s+Telefe(?:\\s+[\\p{L}]+)?$",
-    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario. El grupo propietario vigente está por verificar."
+    "notaPublica": "Se leen sus titulares a través de Google News, filtrados por noticias.mitelefe.com (el noticiero, no el sitio de entretenimiento). Es un intermediario.",
+    "propiedad": "Paramount vendió Telefe el 23 de octubre de 2025 a una sociedad liderada por Gustavo Scaglione, asociado con José Luis Manzano (La Nación). iProfesional suma a Daniel Vila y Claudio Belocopitt, con 25% cada uno de forma provisoria. Los porcentajes definitivos no están confirmados. Comparte socios con Grupo América (A24).",
+    "propiedadAl": "25/10/2025",
+    "propiedadFuentes": [
+      {
+        "label": "La Nación, 23/10/2025",
+        "url": "https://www.lanacion.com.ar/economia/negocios/nuevos-duenos-el-empresario-rosarino-gustavo-scaglione-cerro-la-compra-de-telefe-asociado-con-jose-nid23102025/"
+      },
+      {
+        "label": "iProfesional, 25/10/2025",
+        "url": "https://www.iprofesional.com/negocios/440400-venta-telefe-quienes-son-verdaderos-duenos-canal-mas-visto-de-argentina"
+      }
+    ]
   },
   {
     "outlet": "BBC",
-    "owner": "BBC",
+    "owner": "BBC (corporación pública del Reino Unido)",
     "country": "AR",
     "feedUrl": "https://feeds.bbci.co.uk/mundo/rss.xml",
     "mustMatch": [
@@ -71,6 +123,14 @@
       "Buenos Aires"
     ],
     "nota": "BBC Mundo cubre toda Latinoamérica: solo se toman notas que mencionan Argentina.",
-    "notaPublica": "Se lee BBC Mundo por RSS. Cubre toda Latinoamérica, así que solo se toman notas que mencionan Argentina."
+    "notaPublica": "Se lee BBC Mundo por RSS. Cubre toda Latinoamérica, así que solo se toman notas que mencionan Argentina.",
+    "propiedad": "Corporación pública del Reino Unido, con base constitucional en una Carta Real vigente desde el 1 de enero de 2017. En 2021-22 el canon de TV aportó £3.800 millones de £5.330 millones de ingresos (71%). Cifras más recientes no verificadas.",
+    "propiedadAl": "2021-22",
+    "propiedadFuentes": [
+      {
+        "label": "National Audit Office, nov. 2022",
+        "url": "https://www.nao.org.uk/wp-content/uploads/2022/11/departmental-overview-the-bbc-group-2021-22.pdf"
+      }
+    ]
   }
 ]

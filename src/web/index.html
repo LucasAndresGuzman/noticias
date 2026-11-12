@@ -77,6 +77,7 @@
   th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
   th { background: var(--soft); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
   .tablewrap { overflow-x: auto; }
+  .own { font-size: 13px; color: var(--muted); margin-top: 4px; }
   .limits { margin-top: 28px; font-size: 14px; color: var(--muted); }
   .limits li { margin: 4px 0; }
   .pending { margin: 18px 0 8px; font-size: 14.5px; color: var(--muted); }
@@ -124,9 +125,9 @@
 
   <section class="sources" aria-labelledby="src-h">
     <h3 id="src-h">Medios y cómo se leen</h3>
-    <p class="sub" style="margin:0 0 12px">Seis medios elegidos por propiedad, tipo de medio y audiencia. Esta tabla muestra cómo llegan sus notas al sistema.</p>
+    <p class="sub" style="margin:0 0 12px">Seis medios elegidos por propiedad, tipo de medio y audiencia. La propiedad cambia: cada dato indica su fecha y su fuente, y lo que no se pudo verificar figura como tal.</p>
     <div class="tablewrap"><table>
-      <thead><tr><th>Medio</th><th>Propietario</th><th>Cómo se lee</th><th>Aclaración</th></tr></thead>
+      <thead><tr><th>Medio</th><th>Propiedad</th><th>Cómo se lee</th><th>Aclaración de lectura</th></tr></thead>
       <tbody id="srcbody"><tr><td colspan="4">Cargando…</td></tr></tbody>
     </table></div>
   </section>
@@ -306,9 +307,15 @@
       sourcesByOutlet[s.outlet] = s;
       body.appendChild(el('tr', null, [
         el('td', { 'data-label': 'Medio' }, [el('strong', { text: s.outlet })]),
-        el('td', { 'data-label': 'Propietario', text: s.owner }),
+        el('td', { 'data-label': 'Propiedad' }, [
+          el('strong', { text: s.owner }),
+          s.ownership ? el('div', { class: 'own', text: s.ownership }) : null,
+          el('div', { class: 'own' }, [
+            'Dato de: ' + (s.ownershipAsOf || 'sin fecha') + (s.ownershipSources && s.ownershipSources.length ? ' · Fuentes: ' : ''),
+            ].concat((s.ownershipSources || []).reduce(function (acc, f, i) { if (i) acc.push(' · '); acc.push(link(f.url, f.label)); return acc; }, [])))
+        ]),
         el('td', { 'data-label': 'Cómo se lee', text: METHODS[s.method] || s.method }),
-        el('td', { 'data-label': 'Aclaración', text: s.note || '—' })
+        el('td', { 'data-label': 'Aclaración de lectura', text: s.note || '—' })
       ]));
     });
   }

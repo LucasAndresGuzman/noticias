@@ -14,7 +14,8 @@ export async function runOnce({ repo, sources, fetchFn = fetch, now = new Date()
   // Se limpian los títulos también al leerlos: las notas viejas guardadas con sufijo no se corrigen solas.
   const byOutlet = Object.fromEntries(sources.map((s) => [s.outlet, s]));
   const articles = (await repo.listArticlesSince(new Date(now - WINDOW_MS).toISOString()))
-    .map((a) => ({ ...a, title: cleanTitle(byOutlet[a.outlet] ?? {}, a.title) }))
+    // El propietario se toma de la configuración vigente: las notas viejas guardan el que figuraba al leerlas.
+    .map((a) => ({ ...a, title: cleanTitle(byOutlet[a.outlet] ?? {}, a.title), owner: byOutlet[a.outlet]?.owner ?? a.owner }))
     .filter((a) => isHeadline(a.title));
   const facts = await repo.listFacts();
   const previous = await repo.levelsAt(new Date(now - PREVIOUS_MS).toISOString());

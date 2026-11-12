@@ -221,3 +221,12 @@ test('hecho sensible: queda pendiente de revisión humana y recién se publica a
   const revisado = await run({ ...f, flags: { ...f.flags, humanReviewed: true } });
   assert.equal(revisado.published, 1);
 });
+
+test('runOnce usa el propietario vigente de la configuración y no el guardado en notas viejas', async () => {
+  const repo = createMemoryRepo();
+  const mk = (id, owner) => ({ id, outlet: 'CNN en Español', owner, title: 'Milei despidió al Papa en el aeropuerto de Ezeiza', publishedAt: '2026-11-04T11:00:00Z', country: 'AR', url: `https://x.invalid/${id}` });
+  await repo.upsertArticles([mk('o1', 'Warner Bros. Discovery'), mk('o2', 'Skydance')]);
+  await repo.upsertFact({ id: 'f', articleIds: ['o1'], evidence: [{ id: 'e1', type: 'single_source' }] });
+  await runOnce({ repo, sources: [{ outlet: 'CNN en Español', owner: 'Skydance', country: 'AR' }], now: NOWD });
+  assert.equal((await repo.latestSnapshot()).payload.top.AR[0].owners, 1, 'un mismo medio no puede contar como dos propietarios');
+});
