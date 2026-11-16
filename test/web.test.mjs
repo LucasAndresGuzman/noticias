@@ -112,3 +112,11 @@ test('la página tiene las tres pantallas del menú', async () => {
   const { body } = await handleRequest(get('/', auth), { repo, env: ENV });
   for (const t of ['Noticias del día', 'Comparador de medios', 'Metodología', '#/hecho/', '#/comparador', '#/metodologia']) assert.ok(body.includes(t), t);
 });
+
+test('la página incluye la sección de verificación de videos con su metodología', async () => {
+  const repo = createMemoryRepo();
+  const { body } = await handleRequest(get('/', auth), { repo, env: ENV });
+  assert.match(body, /href="#\/videos"/);
+  assert.match(body, /Verificación de videos/);
+  assert.match(body, /Fuentes permitidas para cifras y leyes/);
+});

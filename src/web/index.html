@@ -220,6 +220,7 @@
       <a href="#/" data-k="home">Noticias del día</a>
       <a href="#/comparador" data-k="comp">Comparador de medios</a>
       <a href="#/metodologia" data-k="met">Metodología</a>
+      <a href="#/videos" data-k="vid">Verificación de videos</a>
     </nav>
   </div>
 </header>
@@ -738,6 +739,107 @@
         el('li', { text: 'Algunos medios se leen a través de Google News: pueden aparecer menos notas que en el sitio real.' })
       ])
     ]));
+    root.appendChild(el('a', { class: 'linkcard', href: '#/videos' }, [el('span', { text: 'Metodología para verificar lo que se dice en un video' }), el('span', { 'aria-hidden': 'true', text: '→' })]));
+    return root;
+  }
+
+  /* ---------- pantalla: verificación de videos ---------- */
+  var VIDEO_TOOL_URL = 'https://claude.ai/artifact/8VRg7JzyvCuwyoUAzPPM58';
+  function viewVideos() {
+    var root = el('div', { class: 'stack', style: 'max-width:900px' });
+    var ul = function (items) { return el('ul', null, items.map(function (t) { return el('li', { text: t }); })); };
+    var rows = function (head, data) {
+      var tb = el('tbody');
+      data.forEach(function (r) {
+        tb.appendChild(el('tr', null, r.map(function (c, i) { return el('td', { 'data-label': head[i] }, [i === 0 ? el('strong', { text: c }) : c]); })));
+      });
+      return el('div', { class: 'tablebox' }, [el('table', null, [el('thead', null, [el('tr', null, head.map(function (t) { return el('th', { text: t }); }))]), tb])]);
+    };
+
+    root.appendChild(el('h1', { class: 'page', text: 'Verificación de videos' }));
+    root.appendChild(el('p', { class: 'lead', text: 'Cómo se comprueba lo que se dice en una entrevista, un discurso o un video corto: se separan las opiniones de las afirmaciones comprobables y cada afirmación se contrasta con la fuente que corresponde a su tipo.' }));
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Qué videos se verifican' }),
+      el('p', { text: 'Solo temas de interés público: política, economía, crimen y justicia, ciencia y salud, y temas sociales. Los videos de espectáculos, chimentos o farándula quedan fuera de alcance y no se procesan.' })
+    ]));
+
+    root.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Cómo se clasifica cada frase' }),
+      el('p', { text: 'La transcripción se divide en frases con su minuto exacto y quién habla. Cada frase entra en una sola categoría. Las preguntas del entrevistador no se verifican, salvo que el entrevistado confirme el dato.' }),
+      rows(['Categoría', 'Ejemplo', '¿Se verifica?'], [
+        ['Opinión', '"Esta ley es un desastre"', 'No: se cuenta'],
+        ['Promesa o propuesta', '"Vamos a bajar impuestos"', 'No: se lista'],
+        ['Sobre sí mismo', '"Nunca dije eso", "cuando fui ministro hicimos…"', 'Sí: contra lo que dijo antes'],
+        ['Cifra o estadística', 'Pobreza, inflación, desempleo, delitos', 'Sí: solo fuentes oficiales'],
+        ['Ley o norma', 'Qué dice una ley, si está vigente', 'Sí: solo fuentes oficiales'],
+        ['Hecho o evento', 'Fechas, compras, causas judiciales', 'Sí: registros oficiales'],
+        ['Ciencia o salud', 'Efectos de un tratamiento, datos sanitarios', 'Sí: organismos y estudios revisados']
+      ])
+    ]));
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Coherencia con lo que dijo antes' }),
+      ul([
+        'Se buscan declaraciones anteriores de la misma persona: entrevistas en video, discursos, versiones taquigráficas del Congreso o la Legislatura, conferencias y redes oficiales.',
+        'Cada antecedente se muestra con cita breve, fecha, lugar y enlace al minuto exacto, junto con su contexto para no sacarlo de contexto.',
+        'Cambiar de opinión no es mentir: "Cambió de postura" se separa de "Contradice lo que dijo", que es negar algo que efectivamente dijo o hizo.'
+      ])
+    ]));
+
+    root.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Fuentes permitidas para cifras y leyes' }),
+      el('p', { text: 'Solo datos publicados por el Estado. Pueden tener sesgos, pero son los datos oficiales. No se usan medios, consultoras ni universidades para estas categorías.' }),
+      rows(['Tema', 'Fuentes'], [
+        ['Economía y social', 'INDEC, BCRA, Ministerio de Economía, datos.gob.ar'],
+        ['Leyes y normas', 'InfoLEG, Boletín Oficial, SAIJ; provincia de Buenos Aires: normas.gba.gob.ar'],
+        ['Crimen y seguridad', 'Ministerio de Seguridad (SNIC), Ministerio Público Fiscal, Poder Judicial (CIJ)'],
+        ['Migración', 'Dirección Nacional de Migraciones, INDEC (censos)'],
+        ['Hechos', 'Registros oficiales; si no hay, al menos dos medios de líneas editoriales opuestas'],
+        ['Ciencia y salud', 'Ministerio de Salud, ANMAT, CONICET, OMS/OPS, estudios revisados por pares']
+      ]),
+      el('p', { text: 'Cada cifra se compara con el dato oficial vigente en la fecha en que se dijo, no con el más reciente. Una ley se verifica en InfoLEG para saber si fue modificada o derogada. Un redondeo razonable (dice 40% y el dato es 39,6%) cuenta como verdad.' })
+    ]));
+
+    var legend = el('div', { class: 'legend' });
+    [['Verdad', 'coincide con la fuente'], ['A medias', 'parte es correcta u omite contexto que cambia el sentido'], ['Engañoso', 'los datos son ciertos pero la conclusión no'], ['Falso', 'contradice la fuente'], ['Sin dato oficial', 'no hay fuente válida para confirmarlo ni refutarlo']].forEach(function (v) {
+      legend.appendChild(el('div', null, [el('strong', { text: v[0] }), el('span', { class: 'r', text: v[1] })]));
+    });
+    var legend2 = el('div', { class: 'legend' });
+    [['Coherente', 'coincide con lo que dijo antes'], ['Contradice lo que dijo', 'niega o tergiversa algo que dijo o hizo'], ['Cambió de postura', 'antes sostenía otra cosa; se muestran ambas fechas'], ['Sin antecedentes', 'no se encontró registro']].forEach(function (v) {
+      legend2.appendChild(el('div', null, [el('strong', { text: v[0] }), el('span', { class: 'r', text: v[1] })]));
+    });
+    root.appendChild(el('section', { class: 'card pad-l' }, [
+      el('h2', { class: 'big', text: 'Veredictos' }),
+      el('p', { text: 'Cifras, leyes, hechos y ciencia:' }), legend,
+      el('p', { text: 'Afirmaciones sobre sí mismo:' }), legend2
+    ]));
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Reglas obligatorias' }),
+      ul([
+        'Nunca se inventan fuentes, cifras, fechas ni enlaces: si algo no se encuentra, se dice.',
+        'Cada veredicto cita el documento exacto: enlace, informe o tabla, número de ley y fecha.',
+        'La misma exigencia para cualquier persona, partido o ideología. Se verifican hechos, no ideas.',
+        'Ante la duda, el veredicto más prudente y revisión humana. Dos IA juzgan por separado y una persona revisa donde no coinciden.'
+      ])
+    ]));
+
+    root.appendChild(el('section', { class: 'card info pad-l' }, [
+      el('h2', { class: 'big', text: 'La herramienta' }),
+      el('p', { text: 'Cargás el video y su transcripción (o la herramienta lee los subtítulos sobreimpresos), Claude clasifica las frases y arma una ficha por afirmación, y la verificación con fuentes se hace en un chat con búsqueda web. El resultado vuelve a las fichas con su veredicto, sus enlaces y el minuto exacto del video.' }),
+      el('p', { text: 'Se abre en claude.ai con tu cuenta. Mientras no la compartas, solo la ve quien la creó.' })
+    ]));
+    root.appendChild(el('a', { class: 'linkcard', href: VIDEO_TOOL_URL, target: '_blank', rel: 'noopener noreferrer' }, [el('span', { text: 'Abrir el verificador de videos' }), el('span', { 'aria-hidden': 'true', text: '↗' })]));
+
+    root.appendChild(el('section', { class: 'card pad-l prose' }, [
+      el('h2', { class: 'big', text: 'Límites de esta etapa' }),
+      ul([
+        'El audio no se transcribe automáticamente: hace falta la transcripción o subtítulos visibles en el video.',
+        'La herramienta no busca en internet por sí sola: la búsqueda de fuentes es un paso aparte y cada veredicto queda pendiente hasta entonces.',
+        'Los videos verificados todavía no se publican en esta página.'
+      ])
+    ]));
     return root;
   }
 
@@ -748,6 +850,7 @@
     if (parts[0] === 'hecho' && parts[1]) return { k: 'home', name: 'hecho', id: parts[1] };
     if (parts[0] === 'comparador') return { k: 'comp', name: 'comp', id: parts[1] || '' };
     if (parts[0] === 'metodologia') return { k: 'met', name: 'met' };
+    if (parts[0] === 'videos') return { k: 'vid', name: 'vid' };
     return { k: 'home', name: 'home' };
   }
   function updateStamp() {
@@ -771,8 +874,8 @@
     if (S.err && !S.top) { view.replaceChildren(el('p', { class: 'state err', role: 'alert', text: 'No se pudo cargar: ' + S.err })); return; }
     if (!S.top) { return; }
     var y = key === drawn.key ? window.scrollY : 0;
-    document.title = ({ home: 'Verificador de noticias · Argentina', hecho: 'Hecho · Verificador de noticias', comp: 'Comparador de medios · Verificador de noticias', met: 'Metodología · Verificador de noticias' })[r.name];
-    var node = r.name === 'hecho' ? viewFact(r.id) : r.name === 'comp' ? viewComp(r.id) : r.name === 'met' ? viewMethod() : viewHome();
+    document.title = ({ home: 'Verificador de noticias · Argentina', hecho: 'Hecho · Verificador de noticias', comp: 'Comparador de medios · Verificador de noticias', met: 'Metodología · Verificador de noticias', vid: 'Verificación de videos · Verificador de noticias' })[r.name];
+    var node = r.name === 'hecho' ? viewFact(r.id) : r.name === 'comp' ? viewComp(r.id) : r.name === 'met' ? viewMethod() : r.name === 'vid' ? viewVideos() : viewHome();
     view.replaceChildren(node);
     updateStamp();
     window.scrollTo(0, y);
